@@ -538,19 +538,90 @@ footer {
 .reveal { opacity:0; transform:translateY(36px); transition:opacity 0.8s ease, transform 0.8s ease; }
 .reveal.visible { opacity:1; transform:translateY(0); }
 
+/* ── HAMBURGER MENU ── */
+.nav-hamburger {
+  display: none;
+  flex-direction: column; justify-content: center; align-items: center;
+  gap: 5px; width: 36px; height: 36px;
+  background: none; border: 1px solid var(--border);
+  border-radius: 3px; cursor: pointer; padding: 6px;
+  transition: border-color 0.2s;
+}
+.nav-hamburger:hover { border-color: var(--red); }
+.nav-hamburger span {
+  display: block; width: 18px; height: 1px;
+  background: var(--dim); transition: all 0.3s;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); background: var(--red); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); background: var(--red); }
+
+/* Mobile nav overlay */
+.mobile-nav-overlay {
+  display: none;
+  position: fixed; inset: 48px 0 0 0; z-index: 99;
+  background: rgba(17,17,17,0.98);
+  border-top: 1px solid var(--border);
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+.mobile-nav-overlay.open {
+  opacity: 1; pointer-events: all;
+}
+.mobile-nav-overlay a {
+  color: var(--dim); text-decoration: none;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem; letter-spacing: 0.1em;
+  transition: color 0.2s;
+  padding: 8px 0;
+}
+.mobile-nav-overlay a:hover { color: var(--red); }
+.mobile-nav-overlay .mobile-page-tabs {
+  margin-top: 24px; display: flex; flex-wrap: wrap;
+  gap: 6px; justify-content: center; padding: 0 24px;
+}
+.mobile-nav-overlay .mobile-page-tabs .page-tab {
+  cursor: pointer; font-size: 0.6rem;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width:900px) {
-  nav { padding:0 16px; }
-  .page-tabs { display:none; }
-  .hero { padding:0 24px 56px; }
-  .hero-photo, .hero-scope-panel, .hero-lut-badge, .hero-waveform { display:none; }
-  #about, #contact { grid-template-columns:1fr; gap:48px; padding:80px 24px; }
-  #services, #skills { padding:80px 24px; }
-  .services-grid { grid-template-columns:1fr; }
-  .skills-columns { grid-template-columns:1fr; gap:48px; }
-  footer { padding:24px; flex-direction:column; gap:10px; text-align:center; }
-  .nav-links { display:none; }
-  .hero-scroll { display:none; }
+  /* Restore cursor on touch devices */
+  body { cursor: auto; }
+  .cursor, .cursor-ring { display: none; }
+  .btn-primary, .form-submit, .page-tab { cursor: pointer; }
+
+  nav { padding: 0 16px; }
+  .page-tabs { display: none; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .mobile-nav-overlay { display: flex; }
+
+  .hero { padding: 0 20px 56px; }
+  .hero-photo, .hero-scope-panel, .hero-lut-badge, .hero-waveform { display: none; }
+  .hero-title { font-size: clamp(56px, 16vw, 120px); }
+
+  #about, #contact { grid-template-columns: 1fr; gap: 48px; padding: 72px 20px; }
+  #services, #skills { padding: 72px 20px; }
+  .services-grid { grid-template-columns: 1fr; }
+  .skills-columns { grid-template-columns: 1fr; gap: 48px; }
+  footer { padding: 24px 20px; flex-direction: column; gap: 10px; text-align: center; }
+  .hero-scroll { display: none; }
+
+  /* Ensure contact form is usable */
+  .contact-form { width: 100%; }
+  .form-submit { cursor: pointer; width: 100%; text-align: center; justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: 0 16px 48px; }
+  #about, #contact { padding: 60px 16px; }
+  #services, #skills { padding: 60px 16px; }
+  .about-stats { grid-template-columns: 1fr 1fr; }
+  .hero-cta { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .btn-primary { width: 100%; justify-content: center; }
 }
 </style>
 </head>
@@ -581,7 +652,28 @@ footer {
     <button class="page-tab">Fairlight</button>
     <button class="page-tab">Deliver</button>
   </div>
+  <!-- Hamburger (mobile only) -->
+  <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- Mobile nav overlay -->
+<div class="mobile-nav-overlay" id="mobileNav">
+  <a href="#about" class="mobile-link">About</a>
+  <a href="#services" class="mobile-link">Services</a>
+  <a href="#skills" class="mobile-link">Skills</a>
+  <a href="gallery.html" class="mobile-link">Work</a>
+  <a href="#contact" class="mobile-link">Contact</a>
+  <div class="mobile-page-tabs">
+    <button class="page-tab">Media</button>
+    <button class="page-tab active">Edit</button>
+    <button class="page-tab">Fusion</button>
+    <button class="page-tab">Color</button>
+    <button class="page-tab">Fairlight</button>
+    <button class="page-tab">Deliver</button>
+  </div>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -843,6 +935,21 @@ footer {
 </footer>
 
 <script>
+// Hamburger menu
+const hamburger = document.getElementById('hamburger');
+const mobileNav = document.getElementById('mobileNav');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileNav.classList.toggle('open');
+});
+// Close mobile nav when a link is clicked
+mobileNav.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    mobileNav.classList.remove('open');
+  });
+});
+
 // Custom cursor
 const cursor = document.getElementById('cursor');
 const ring   = document.getElementById('cursorRing');

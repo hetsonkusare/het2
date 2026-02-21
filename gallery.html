@@ -496,17 +496,33 @@ footer {
 
 /* ── RESPONSIVE ── */
 @media (max-width:900px) {
-  .gallery-grid { columns:2; padding:16px 24px 48px; }
-  .page-header, .filter-bar { padding-left:24px; padding-right:24px; }
-  .player-sidebar { width:200px; }
-  nav { padding:0 16px; }
-  #mediaWrap video.vid-vertical { max-width:min(260px,46vw); }
+  /* Restore cursor on touch devices */
+  body { cursor: auto; }
+  .cursor, .cursor-ring { display: none; }
+  .icon-btn, .filter-btn, .img-ctrl-btn, .stage-nav { cursor: pointer; }
+  .seekbar-wrap, .vol-slider, .vol-slider::-webkit-slider-thumb,
+  .vol-slider::-moz-range-thumb { cursor: pointer; }
+  .playlist-item { cursor: pointer; }
+
+  .gallery-grid { columns: 2; padding: 16px 16px 48px; }
+  .page-header, .filter-bar { padding-left: 16px; padding-right: 16px; }
+  .player-sidebar { width: 200px; }
+  nav { padding: 0 16px; }
+  #mediaWrap video.vid-vertical { max-width: min(260px, 46vw); }
 }
 @media (max-width:650px) {
-  .gallery-grid { columns:1; }
-  .player-sidebar { display:none; }
-  footer { flex-direction:column; gap:8px; padding:16px 24px; }
-  #mediaWrap video.vid-vertical { max-width:84vw; }
+  .gallery-grid { columns: 1; }
+  .player-sidebar { display: none; }
+  footer { flex-direction: column; gap: 8px; padding: 16px 16px; }
+  #mediaWrap video.vid-vertical { max-width: 84vw; }
+  /* Make controls more touch friendly on small screens */
+  .icon-btn { padding: 10px; }
+  .controls-row { gap: 4px; flex-wrap: wrap; }
+  .time-display { font-size: 0.65rem; }
+  .vol-group:hover .vol-slider-wrap { width: 60px; }
+  .vol-slider { width: 60px; }
+  /* Larger tap targets for prev/next on stage */
+  .stage-nav { width: 48px; color: rgba(255,255,255,0.15); }
 }
 </style>
 </head>
@@ -949,6 +965,10 @@ let isSeeking = false;
 seekWrap.addEventListener('mousedown', e => { isSeeking=true; doSeek(e); });
 document.addEventListener('mouseup', () => { isSeeking=false; });
 document.addEventListener('mousemove', e => { if (isSeeking) doSeek(e); });
+// Touch seek support
+seekWrap.addEventListener('touchstart', e => { isSeeking=true; doSeekTouch(e); }, {passive:true});
+document.addEventListener('touchend', () => { isSeeking=false; });
+document.addEventListener('touchmove', e => { if (isSeeking) doSeekTouch(e); }, {passive:true});
 seekWrap.addEventListener('mousemove', e => {
   const rect = document.getElementById('seekbarTrack').getBoundingClientRect();
   const pct = Math.min(Math.max((e.clientX-rect.left)/rect.width,0),1);
@@ -961,6 +981,11 @@ function doSeek(e) {
   if (!currentVideo?.duration) return;
   const rect = document.getElementById('seekbarTrack').getBoundingClientRect();
   currentVideo.currentTime = Math.min(Math.max((e.clientX-rect.left)/rect.width,0),1)*currentVideo.duration;
+}
+function doSeekTouch(e) {
+  if (!currentVideo?.duration || !e.touches[0]) return;
+  const rect = document.getElementById('seekbarTrack').getBoundingClientRect();
+  currentVideo.currentTime = Math.min(Math.max((e.touches[0].clientX-rect.left)/rect.width,0),1)*currentVideo.duration;
 }
 function updateSeek() {
   if (!currentVideo?.duration) return;
