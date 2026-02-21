@@ -11,7 +11,6 @@
 :root {
   --black: #080808; --white: #f0ede8; --accent: #c8ff00;
   --grey: #1a1a1a; --mid: #333; --text-dim: #888;
-  --player-h: 9px;
 }
 html { scroll-behavior: smooth; }
 body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; cursor: none; }
@@ -19,12 +18,12 @@ body { background: var(--black); color: var(--white); font-family: 'DM Sans', sa
 /* CURSOR */
 .cursor { position: fixed; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); }
 .cursor-ring { position: fixed; width: 40px; height: 40px; border: 1px solid rgba(200,255,0,0.4); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.12s ease; }
-body:has(a:hover) .cursor-ring, body:has(button:hover) .cursor-ring, body:has(input:hover) .cursor-ring { transform: translate(-50%,-50%) scale(2); border-color: var(--accent); }
+body:has(a:hover) .cursor-ring, body:has(button:hover) .cursor-ring { transform: translate(-50%,-50%) scale(2); border-color: var(--accent); }
 
 /* NAV */
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; justify-content: space-between; align-items: center; padding: 24px 48px; background: rgba(8,8,8,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; justify-content: space-between; align-items: center; padding: 24px 48px; background: rgba(8,8,8,0.94); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
 .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.12em; color: var(--white); text-decoration: none; }
-.nav-back { color: var(--text-dim); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.3s; }
+.nav-back { display: flex; align-items: center; gap: 8px; color: var(--text-dim); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.3s; }
 .nav-back:hover { color: var(--accent); }
 
 /* HEADER */
@@ -49,303 +48,287 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; j
 .gallery-item:hover .gallery-overlay { opacity: 1; }
 .overlay-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 0.05em; }
 .overlay-type { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-top: 3px; }
-.overlay-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.7); width: 52px; height: 52px; background: var(--accent); color: var(--black); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; opacity: 0; transition: all 0.3s; padding-left: 4px; }
+.overlay-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.7); width: 52px; height: 52px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0; transition: all 0.3s; }
 .gallery-item:hover .overlay-play { opacity: 1; transform: translate(-50%,-50%) scale(1); }
-.video-badge { position: absolute; top: 10px; left: 10px; background: rgba(200,255,0,0.9); color: var(--black); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 9px; }
+.video-badge { position: absolute; top: 10px; left: 10px; background: rgba(200,255,0,0.92); color: var(--black); font-size: 0.6rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 9px; display: flex; align-items: center; gap: 5px; }
 
 /* EMPTY / SETUP */
 .empty-state { padding: 80px 48px; text-align: center; display: none; }
-.empty-icon { font-size: 3.5rem; margin-bottom: 20px; opacity: 0.3; }
-.empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--text-dim); margin-bottom: 12px; }
+.empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--text-dim); margin-bottom: 12px; margin-top: 16px; }
 .empty-desc { color: var(--text-dim); font-size: 0.88rem; line-height: 1.7; max-width: 480px; margin: 0 auto; }
 .empty-desc code { background: var(--grey); padding: 2px 7px; font-family: monospace; color: var(--accent); border-radius: 2px; }
 .setup-guide { margin: 0 48px 80px; border: 1px solid var(--grey); padding: 40px; background: var(--grey); display: none; }
 .setup-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--accent); margin-bottom: 20px; }
 .step { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 14px; }
-.step-num { flex-shrink: 0; width: 26px; height: 26px; background: var(--accent); color: var(--black); font-weight: 500; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; }
+.step-num { flex-shrink: 0; width: 26px; height: 26px; background: var(--accent); color: var(--black); font-weight: 600; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; }
 .step-text { font-size: 0.88rem; line-height: 1.6; color: #aaa; }
 .step-text code { color: var(--accent); background: rgba(200,255,0,0.1); padding: 1px 5px; font-family: monospace; border-radius: 2px; }
 .step-text strong { color: var(--white); }
 
-/* ============================================================
-   PLAYER OVERLAY (YouTube-style)
-   ============================================================ */
-.player-overlay {
-  position: fixed; inset: 0; z-index: 1000;
-  background: rgba(0,0,0,0.96);
-  display: none; flex-direction: column;
-  overflow: hidden;
-}
+/* =============================================================
+   PLAYER OVERLAY
+   ============================================================= */
+.player-overlay { position: fixed; inset: 0; z-index: 1000; background: #000; display: none; flex-direction: column; overflow: hidden; }
 .player-overlay.open { display: flex; }
 
 /* TOP BAR */
-.player-topbar {
-  display: flex; align-items: center; gap: 16px;
-  padding: 16px 24px;
-  flex-shrink: 0;
-  background: rgba(0,0,0,0.6);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-.player-close-btn {
-  background: none; border: none; color: var(--white);
-  font-size: 1.4rem; cursor: none; line-height: 1;
-  transition: color 0.2s; padding: 4px 8px;
-}
-.player-close-btn:hover { color: var(--accent); }
-.player-top-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.06em; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.player-top-count { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.1em; white-space: nowrap; }
+.player-topbar { display: flex; align-items: center; gap: 14px; padding: 13px 20px; flex-shrink: 0; background: #0d0d0d; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.player-top-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: 0.07em; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.player-top-count { font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.1em; white-space: nowrap; }
 
-/* MAIN CONTENT AREA */
-.player-body {
-  display: flex; flex: 1; overflow: hidden;
+/* Icon button — used for ALL controls */
+.icon-btn {
+  background: none; border: none; color: rgba(255,255,255,0.75);
+  cursor: none; padding: 7px; display: flex; align-items: center; justify-content: center;
+  border-radius: 4px; transition: color 0.2s, background 0.2s; flex-shrink: 0;
+}
+.icon-btn:hover { color: var(--accent); background: rgba(255,255,255,0.07); }
+.icon-btn.active { color: var(--accent); }
+.icon-btn svg { display: block; pointer-events: none; }
+
+/* BODY */
+.player-body { display: flex; flex: 1; overflow: hidden; min-height: 0; }
+
+/* -------------------------------------------------------
+   STAGE
+   ------------------------------------------------------- */
+.player-stage { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #000; min-width: 0; }
+
+/* Blurred bg — shown always, fills black bars beautifully */
+.stage-blur-bg {
+  position: absolute; inset: -50px;
+  background-size: cover; background-position: center;
+  filter: blur(52px) brightness(0.2) saturate(1.5);
+  z-index: 0; pointer-events: none;
+  transition: background-image 0.4s;
 }
 
-/* VIDEO/IMAGE STAGE */
-.player-stage {
-  flex: 1; display: flex; align-items: center; justify-content: center;
-  background: #000; position: relative; overflow: hidden;
+/* Media wrap — sits above blur bg */
+#mediaWrap {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 100%;
 }
-.player-stage img {
+
+/* ---- HORIZONTAL video (landscape) — normal full-stage display ---- */
+#mediaWrap video.vid-horizontal {
+  width: 100%; height: 100%;
   max-width: 100%; max-height: 100%;
-  object-fit: contain;
-  user-select: none;
-  display: block;
-}
-.player-stage video {
-  max-width: 100%; max-height: 100%;
-  object-fit: contain;
-  display: block;
+  object-fit: contain; display: block;
 }
 
-/* SIDE PREV/NEXT overlays on stage */
+/* ---- VERTICAL video (reel / portrait 9:16) — phone-frame style ---- */
+#mediaWrap video.vid-vertical {
+  height: 100%;
+  width: auto;
+  max-height: 100%;
+  max-width: min(380px, 42vw);   /* looks like a phone screen */
+  object-fit: cover;             /* fills the frame, no black bars on sides */
+  display: block;
+  border-radius: 6px;
+  box-shadow: 0 8px 60px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.06);
+}
+
+/* Image */
+#mediaWrap img {
+  max-width: 100%; max-height: 100%;
+  object-fit: contain; display: block;
+  user-select: none; transform-origin: center; transition: transform 0.2s;
+}
+
+/* Stage prev/next arrow zones */
 .stage-nav {
-  position: absolute; top: 0; bottom: 0;
-  width: 80px; display: flex; align-items: center; justify-content: center;
-  background: transparent; border: none; color: rgba(255,255,255,0); cursor: none;
-  transition: color 0.25s, background 0.25s;
-  font-size: 2rem;
-  z-index: 10;
+  position: absolute; top: 0; bottom: 0; width: 72px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; border: none;
+  color: rgba(255,255,255,0); cursor: none;
+  transition: color 0.22s, background 0.22s; z-index: 10;
 }
-.stage-nav:hover { color: var(--white); background: rgba(0,0,0,0.3); }
+.stage-nav:hover { color: rgba(255,255,255,0.9); background: rgba(0,0,0,0.32); }
 .stage-nav-prev { left: 0; }
 .stage-nav-next { right: 0; }
 
-/* VIDEO CONTROLS BAR */
-.player-controls {
-  flex-shrink: 0;
-  background: rgba(10,10,10,0.98);
-  border-top: 1px solid rgba(255,255,255,0.07);
-  padding: 0 24px 12px;
-  display: none; /* shown only for video */
+/* Play flash bubble */
+.play-flash {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%) scale(0);
+  width: 76px; height: 76px; background: rgba(200,255,0,0.92);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  pointer-events: none; z-index: 20;
+  opacity: 0; transition: transform 0.08s ease, opacity 0.45s ease;
 }
+.play-flash.pop { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+.play-flash.fade { transform: translate(-50%,-50%) scale(1.1); opacity: 0; }
+
+/* Image zoom buttons */
+.img-controls { position: absolute; bottom: 14px; right: 14px; display: none; gap: 6px; z-index: 10; }
+.img-ctrl-btn {
+  background: rgba(10,10,10,0.82); border: 1px solid rgba(255,255,255,0.14);
+  color: var(--white); width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: none; border-radius: 4px; transition: all 0.2s;
+}
+.img-ctrl-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Keyboard hint */
+.kb-hint {
+  position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,0.78); color: rgba(255,255,255,0.5);
+  font-size: 0.7rem; padding: 5px 14px; border-radius: 4px;
+  pointer-events: none; opacity: 0; transition: opacity 0.4s;
+  white-space: nowrap; z-index: 15; letter-spacing: 0.04em;
+}
+.kb-hint.show { opacity: 1; }
+
+/* =============================================================
+   VIDEO CONTROLS BAR
+   ============================================================= */
+.player-controls { flex-shrink: 0; background: #0d0d0d; border-top: 1px solid rgba(255,255,255,0.07); padding: 5px 18px 13px; display: none; }
 .player-controls.visible { display: block; }
 
-/* SEEKBAR */
-.seekbar-wrap {
-  position: relative; height: 20px;
-  display: flex; align-items: center;
-  cursor: none;
-}
-.seekbar-track {
-  width: 100%; height: var(--player-h);
-  background: rgba(255,255,255,0.15);
-  border-radius: 4px; position: relative; overflow: hidden;
-  transition: height 0.15s;
-}
-.seekbar-wrap:hover .seekbar-track { height: 14px; }
-.seekbar-buffer {
-  position: absolute; top: 0; left: 0; height: 100%;
-  background: rgba(255,255,255,0.25); border-radius: 4px;
-  transition: width 0.5s;
-}
-.seekbar-progress {
-  position: absolute; top: 0; left: 0; height: 100%;
-  background: var(--accent); border-radius: 4px;
-  pointer-events: none;
-}
+/* Seekbar */
+.seekbar-wrap { height: 22px; display: flex; align-items: center; cursor: none; position: relative; }
+.seekbar-track { width: 100%; height: 4px; background: rgba(255,255,255,0.15); border-radius: 4px; position: relative; transition: height 0.15s; overflow: visible; }
+.seekbar-wrap:hover .seekbar-track { height: 7px; }
+.seekbar-buffer { position: absolute; top: 0; left: 0; height: 100%; background: rgba(255,255,255,0.22); border-radius: 4px; }
+.seekbar-fill { position: absolute; top: 0; left: 0; height: 100%; background: var(--accent); border-radius: 4px; pointer-events: none; }
 .seekbar-thumb {
-  position: absolute; top: 50%; right: -6px;
-  width: 14px; height: 14px; background: var(--accent);
-  border-radius: 50%; transform: translateY(-50%) scale(0);
-  transition: transform 0.15s; pointer-events: none;
+  position: absolute; top: 50%; right: -7px;
+  width: 14px; height: 14px; background: var(--accent); border-radius: 50%;
+  transform: translateY(-50%) scale(0); transition: transform 0.15s;
+  pointer-events: none; z-index: 2;
 }
 .seekbar-wrap:hover .seekbar-thumb { transform: translateY(-50%) scale(1); }
-
-/* TOOLTIP */
 .seekbar-tooltip {
-  position: absolute; bottom: 28px;
-  background: rgba(0,0,0,0.85); color: var(--white);
-  font-size: 0.72rem; padding: 3px 8px; border-radius: 3px;
+  position: absolute; bottom: 26px;
+  background: rgba(0,0,0,0.88); color: var(--white);
+  font-size: 0.7rem; padding: 3px 8px; border-radius: 3px;
   pointer-events: none; opacity: 0; transform: translateX(-50%);
   white-space: nowrap; transition: opacity 0.1s;
 }
 .seekbar-wrap:hover .seekbar-tooltip { opacity: 1; }
 
-/* BOTTOM CONTROLS ROW */
-.controls-row {
-  display: flex; align-items: center; gap: 12px;
-  padding-top: 8px;
-}
-.ctrl-btn {
-  background: none; border: none; color: rgba(255,255,255,0.8);
-  font-size: 1.1rem; cursor: none; padding: 6px;
-  transition: color 0.2s, transform 0.15s;
-  display: flex; align-items: center;
-}
-.ctrl-btn:hover { color: var(--accent); transform: scale(1.15); }
-.ctrl-btn.active { color: var(--accent); }
-
-/* VOLUME */
-.volume-group { display: flex; align-items: center; gap: 8px; }
-.volume-slider-wrap { width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center; }
-.volume-group:hover .volume-slider-wrap { width: 90px; }
-.volume-slider {
-  -webkit-appearance: none; appearance: none;
-  width: 90px; height: 4px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 2px; outline: none; cursor: none;
-}
-.volume-slider::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 12px; height: 12px;
-  background: var(--accent); border-radius: 50%; cursor: none;
-}
-.volume-slider::-moz-range-thumb { width: 12px; height: 12px; background: var(--accent); border: none; border-radius: 50%; cursor: none; }
-
-/* TIME */
-.time-display { font-size: 0.78rem; color: rgba(255,255,255,0.7); letter-spacing: 0.04em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* Controls row */
+.controls-row { display: flex; align-items: center; gap: 2px; padding-top: 4px; }
 .ctrl-spacer { flex: 1; }
+.time-display { font-size: 0.76rem; color: rgba(255,255,255,0.65); letter-spacing: 0.04em; white-space: nowrap; font-variant-numeric: tabular-nums; padding: 0 8px; }
+.speed-label { font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.04em; min-width: 34px; text-align: center; }
 
-/* PLAYBACK SPEED */
-.speed-btn { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.05em; }
+/* Volume */
+.vol-group { display: flex; align-items: center; gap: 4px; }
+.vol-slider-wrap { width: 0; overflow: hidden; transition: width 0.28s ease; display: flex; align-items: center; }
+.vol-group:hover .vol-slider-wrap { width: 80px; }
+.vol-slider { -webkit-appearance: none; appearance: none; width: 80px; height: 3px; background: rgba(255,255,255,0.2); border-radius: 2px; outline: none; cursor: none; }
+.vol-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 11px; height: 11px; background: var(--accent); border-radius: 50%; cursor: none; }
+.vol-slider::-moz-range-thumb { width: 11px; height: 11px; background: var(--accent); border: none; border-radius: 50%; cursor: none; }
 
-/* PLAYLIST SIDEBAR */
-.player-sidebar {
-  width: 300px; flex-shrink: 0;
-  background: rgba(14,14,14,0.98);
-  border-left: 1px solid rgba(255,255,255,0.06);
-  display: flex; flex-direction: column;
-  overflow: hidden;
-}
-.sidebar-header {
-  padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.06);
-  font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--text-dim); flex-shrink: 0;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.sidebar-search {
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 20px; border-bottom: 1px solid rgba(255,255,255,0.05);
-  flex-shrink: 0;
-}
-.sidebar-search input {
-  flex: 1; background: var(--grey); border: 1px solid transparent;
-  color: var(--white); font-family: 'DM Sans', sans-serif;
-  font-size: 0.8rem; padding: 7px 12px; outline: none;
-  border-radius: 2px; transition: border-color 0.2s;
-}
+/* =============================================================
+   PLAYLIST SIDEBAR
+   ============================================================= */
+.player-sidebar { width: 290px; flex-shrink: 0; background: #0d0d0d; border-left: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; overflow: hidden; }
+.sidebar-header { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim); flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; }
+.sidebar-count { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; color: var(--accent); }
+.sidebar-search { padding: 10px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }
+.sidebar-search input { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid transparent; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.8rem; padding: 7px 12px; outline: none; border-radius: 3px; transition: border-color 0.2s; }
+.sidebar-search input::placeholder { color: var(--text-dim); }
 .sidebar-search input:focus { border-color: var(--accent); }
 .sidebar-list { flex: 1; overflow-y: auto; }
-.sidebar-list::-webkit-scrollbar { width: 4px; }
-.sidebar-list::-webkit-scrollbar-track { background: transparent; }
+.sidebar-list::-webkit-scrollbar { width: 3px; }
 .sidebar-list::-webkit-scrollbar-thumb { background: var(--mid); border-radius: 2px; }
 
-.playlist-item {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 16px; cursor: none;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  transition: background 0.2s;
-  position: relative;
-}
+.playlist-item { display: flex; align-items: center; gap: 11px; padding: 9px 14px; cursor: none; border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.2s; position: relative; }
 .playlist-item:hover { background: rgba(255,255,255,0.05); }
 .playlist-item.active { background: rgba(200,255,0,0.07); border-left: 2px solid var(--accent); }
 .playlist-item.active .pi-title { color: var(--accent); }
 
-.pi-thumb {
-  width: 56px; height: 38px; flex-shrink: 0;
-  background: var(--grey); overflow: hidden; position: relative;
-  border-radius: 2px;
-}
+.pi-thumb { width: 54px; height: 36px; flex-shrink: 0; background: var(--grey); overflow: hidden; position: relative; border-radius: 2px; }
 .pi-thumb img, .pi-thumb video { width: 100%; height: 100%; object-fit: cover; }
-.pi-vid-icon {
-  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  font-size: 0.9rem; color: var(--accent); background: rgba(0,0,0,0.4);
-}
+.pi-play-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); }
+
 .pi-info { flex: 1; min-width: 0; }
-.pi-title { font-size: 0.8rem; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.pi-type { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-top: 3px; }
-.pi-num { font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; color: var(--text-dim); flex-shrink: 0; min-width: 20px; text-align: right; }
-.pi-playing { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); }
-.pi-playing span {
-  display: inline-block; width: 3px; height: 12px; background: var(--accent);
-  margin: 0 1px; border-radius: 2px;
-  animation: barBounce 0.8s ease infinite alternate;
-}
-.pi-playing span:nth-child(2) { animation-delay: 0.2s; height: 8px; }
-.pi-playing span:nth-child(3) { animation-delay: 0.4s; height: 14px; }
+.pi-title { font-size: 0.78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pi-meta { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-top: 3px; }
+.pi-num { font-family: 'Bebas Neue', sans-serif; font-size: 0.88rem; color: var(--text-dim); flex-shrink: 0; min-width: 18px; text-align: right; }
 
-/* IMAGE zoom controls */
-.img-controls {
-  position: absolute; bottom: 16px; right: 16px;
-  display: flex; gap: 8px; z-index: 5;
-}
-.img-ctrl-btn {
-  background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.15);
-  color: var(--white); width: 36px; height: 36px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem; cursor: none; border-radius: 4px;
-  transition: all 0.2s;
-}
-.img-ctrl-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-/* KEYBOARD HINT */
-.kb-hint {
-  position: absolute; bottom: 60px; left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.75); color: rgba(255,255,255,0.6);
-  font-size: 0.72rem; padding: 6px 14px; border-radius: 4px;
-  letter-spacing: 0.05em; pointer-events: none;
-  opacity: 0; transition: opacity 0.4s;
-  white-space: nowrap;
-}
-.kb-hint.show { opacity: 1; }
-
-/* BIG PLAY BUTTON FLASH */
-.play-flash {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0);
-  width: 80px; height: 80px; background: rgba(200,255,0,0.9);
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-size: 2rem; color: var(--black); pointer-events: none;
-  transition: transform 0.08s ease, opacity 0.4s ease;
-  opacity: 0; z-index: 20;
-}
-.play-flash.flash { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+/* Animated bars for now-playing */
+.pi-bars { display: none; align-items: flex-end; gap: 2px; height: 14px; margin-left: 4px; }
+.playlist-item.active .pi-bars { display: flex; }
+.playlist-item.active .pi-num { display: none; }
+.pi-bars span { display: block; width: 3px; background: var(--accent); border-radius: 1px; animation: barBounce 0.7s ease infinite alternate; }
+.pi-bars span:nth-child(1) { height: 7px; }
+.pi-bars span:nth-child(2) { height: 13px; animation-delay: 0.18s; }
+.pi-bars span:nth-child(3) { height: 5px; animation-delay: 0.34s; }
 
 /* FOOTER */
-footer { padding: 32px 48px; border-top: 1px solid var(--grey); display: flex; justify-content: space-between; align-items: center; }
+footer { padding: 28px 48px; border-top: 1px solid var(--grey); display: flex; justify-content: space-between; align-items: center; }
 .footer-copy { font-size: 0.72rem; color: var(--text-dim); }
-.footer-back { font-size: 0.72rem; color: var(--text-dim); text-decoration: none; transition: color 0.3s; }
+.footer-back { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--text-dim); text-decoration: none; transition: color 0.3s; }
 .footer-back:hover { color: var(--accent); }
 
 /* ANIMATIONS */
-@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes barBounce { from { transform: scaleY(0.4); } to { transform: scaleY(1); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes barBounce { from { transform: scaleY(0.35); } to { transform: scaleY(1); } }
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
   .gallery-grid { columns: 2; padding: 0 24px 48px; }
   .page-header, .filter-bar { padding-left: 24px; padding-right: 24px; }
   .setup-guide { margin: 0 24px 48px; }
-  .player-sidebar { width: 220px; }
+  .player-sidebar { width: 210px; }
   nav { padding: 18px 24px; }
+  #mediaWrap video.vid-vertical { max-width: min(260px, 46vw); }
 }
 @media (max-width: 650px) {
   .gallery-grid { columns: 1; }
   .player-sidebar { display: none; }
   footer { flex-direction: column; gap: 10px; padding: 24px; }
+  #mediaWrap video.vid-vertical { max-width: 84vw; border-radius: 4px; }
 }
 </style>
 </head>
 <body>
+
+<!-- ===================== SVG ICON SPRITE (hidden) ===================== -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <!-- Close X -->
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <!-- Play triangle -->
+  <symbol id="i-play" viewBox="0 0 24 24"><polygon points="5,3 21,12 5,21" fill="currentColor"/></symbol>
+  <!-- Pause bars -->
+  <symbol id="i-pause" viewBox="0 0 24 24"><rect x="5" y="3" width="4" height="18" rx="1" fill="currentColor"/><rect x="15" y="3" width="4" height="18" rx="1" fill="currentColor"/></symbol>
+  <!-- Skip previous -->
+  <symbol id="i-prev" viewBox="0 0 24 24"><polygon points="19,3 7,12 19,21" fill="currentColor"/><rect x="5" y="3" width="3" height="18" rx="1" fill="currentColor"/></symbol>
+  <!-- Skip next -->
+  <symbol id="i-next" viewBox="0 0 24 24"><polygon points="5,3 17,12 5,21" fill="currentColor"/><rect x="16" y="3" width="3" height="18" rx="1" fill="currentColor"/></symbol>
+  <!-- Volume high -->
+  <symbol id="i-vol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11,5 6,9 2,9 2,15 6,15 11,19" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></symbol>
+  <!-- Volume low -->
+  <symbol id="i-vol-low" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11,5 6,9 2,9 2,15 6,15 11,19" fill="currentColor" stroke="none"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></symbol>
+  <!-- Mute -->
+  <symbol id="i-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11,5 6,9 2,9 2,15 6,15 11,19" fill="currentColor" stroke="none"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></symbol>
+  <!-- Loop arrows -->
+  <symbol id="i-loop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17,1 21,5 17,9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7,23 3,19 7,15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></symbol>
+  <!-- Autoplay next -->
+  <symbol id="i-auto" viewBox="0 0 24 24"><polygon points="5,3 17,12 5,21" fill="currentColor"/><rect x="17" y="3" width="3" height="18" rx="1" fill="currentColor"/></symbol>
+  <!-- Fullscreen expand -->
+  <symbol id="i-fs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15,3 21,3 21,9"/><polyline points="9,21 3,21 3,15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></symbol>
+  <!-- Fullscreen collapse -->
+  <symbol id="i-fs-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,14 10,14 10,20"/><polyline points="20,10 14,10 14,4"/><line x1="10" y1="14" x2="3" y2="21"/><line x1="21" y1="3" x2="14" y2="10"/></symbol>
+  <!-- Arrow left -->
+  <symbol id="i-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15,18 9,12 15,6"/></symbol>
+  <!-- Arrow right -->
+  <symbol id="i-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></symbol>
+  <!-- Zoom in -->
+  <symbol id="i-zoomin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></symbol>
+  <!-- Zoom out -->
+  <symbol id="i-zoomout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></symbol>
+  <!-- Reset -->
+  <symbol id="i-reset" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,4 1,10 7,10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></symbol>
+  <!-- Video camera badge -->
+  <symbol id="i-vid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23,7 16,12 23,17" fill="currentColor" stroke="none"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></symbol>
+  <!-- Back arrow -->
+  <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12,19 5,12 12,5"/></symbol>
+</svg>
 
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
@@ -353,7 +336,10 @@ footer { padding: 32px 48px; border-top: 1px solid var(--grey); display: flex; j
 <!-- NAV -->
 <nav>
   <a href="index.html" class="nav-logo">HS.</a>
-  <a href="index.html" class="nav-back">← Back to Portfolio</a>
+  <a href="index.html" class="nav-back">
+    <svg width="14" height="14"><use href="#i-back"/></svg>
+    Back to Portfolio
+  </a>
 </nav>
 
 <!-- HEADER -->
@@ -373,25 +359,27 @@ footer { padding: 32px 48px; border-top: 1px solid var(--grey); display: flex; j
 <!-- GRID -->
 <div class="gallery-grid" id="galleryGrid"></div>
 <div class="empty-state" id="emptyState">
-  <div class="empty-icon">📂</div>
+  <svg width="48" height="48" style="opacity:.25;color:var(--text-dim)"><use href="#i-vid"/></svg>
   <div class="empty-title">No media found</div>
   <div class="empty-desc">Add your files to the <code>media/</code> folder and update the list in the code below.</div>
 </div>
 <div class="setup-guide" id="setupGuide">
-  <div class="setup-title">📁 How To Add Your Media</div>
+  <div class="setup-title">How To Add Your Media Files</div>
   <div class="step"><div class="step-num">1</div><div class="step-text">Create a <code>media/</code> folder next to <code>gallery.html</code>.</div></div>
-  <div class="step"><div class="step-num">2</div><div class="step-text">Put all your <strong>images</strong> (jpg, png, webp) and <strong>videos</strong> (mp4, webm, mov) in it.</div></div>
-  <div class="step"><div class="step-num">3</div><div class="step-text">Find the <strong>MEDIA FILES LIST</strong> below in the code and add your filenames.</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-text">Put your <strong>images</strong> and <strong>videos</strong> inside it.</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-text">Find <strong>MEDIA FILES LIST</strong> in the script and add your filenames.</div></div>
 </div>
 
-<!-- ===================== PLAYER OVERLAY ===================== -->
+<!-- ===================== PLAYER ===================== -->
 <div class="player-overlay" id="playerOverlay">
 
   <!-- TOP BAR -->
   <div class="player-topbar">
-    <button class="player-close-btn" onclick="closePlayer()" title="Close (Esc)">✕</button>
+    <button class="icon-btn" onclick="closePlayer()" title="Close  Esc">
+      <svg width="20" height="20"><use href="#i-close"/></svg>
+    </button>
     <div class="player-top-title" id="playerTitle">—</div>
-    <div class="player-top-count" id="playerCount">1 / 1</div>
+    <div class="player-top-count" id="playerCount"></div>
   </div>
 
   <!-- BODY -->
@@ -399,48 +387,64 @@ footer { padding: 32px 48px; border-top: 1px solid var(--grey); display: flex; j
 
     <!-- STAGE -->
     <div class="player-stage" id="playerStage">
+      <!-- Blurred background — always rendered, fills bars for any aspect ratio -->
+      <div class="stage-blur-bg" id="stageBg"></div>
 
-      <!-- Prev/Next on stage -->
-      <button class="stage-nav stage-nav-prev" onclick="navigate(-1)" title="Previous (←)">‹</button>
-      <button class="stage-nav stage-nav-next" onclick="navigate(1)" title="Next (→)">›</button>
+      <!-- Prev / Next tap zones -->
+      <button class="stage-nav stage-nav-prev" onclick="navigate(-1)" title="Previous  ←">
+        <svg width="28" height="28"><use href="#i-left"/></svg>
+      </button>
+      <button class="stage-nav stage-nav-next" onclick="navigate(1)" title="Next  →">
+        <svg width="28" height="28"><use href="#i-right"/></svg>
+      </button>
 
-      <!-- Media will be injected here -->
-      <div id="mediaWrap" style="max-width:100%;max-height:100%;display:flex;align-items:center;justify-content:center;"></div>
+      <!-- Actual media injected here -->
+      <div id="mediaWrap"></div>
 
-      <!-- Play flash -->
-      <div class="play-flash" id="playFlash">▶</div>
-
-      <!-- Image controls (zoom, fit) -->
-      <div class="img-controls" id="imgControls" style="display:none;">
-        <button class="img-ctrl-btn" onclick="zoomImg(-0.25)" title="Zoom Out">−</button>
-        <button class="img-ctrl-btn" onclick="zoomImg(0.25)" title="Zoom In">+</button>
-        <button class="img-ctrl-btn" onclick="resetZoom()" title="Reset">⊡</button>
+      <!-- Play/pause flash bubble -->
+      <div class="play-flash" id="playFlash">
+        <svg width="28" height="28" id="flashIcon"><use href="#i-play"/></svg>
       </div>
 
-      <!-- Keyboard hint -->
-      <div class="kb-hint" id="kbHint">Space: Play/Pause · ← → Navigate · F: Fullscreen · M: Mute</div>
+      <!-- Image zoom controls -->
+      <div class="img-controls" id="imgControls">
+        <button class="img-ctrl-btn" onclick="zoomImg(-0.25)" title="Zoom Out">
+          <svg width="16" height="16"><use href="#i-zoomout"/></svg>
+        </button>
+        <button class="img-ctrl-btn" onclick="zoomImg(0.25)" title="Zoom In">
+          <svg width="16" height="16"><use href="#i-zoomin"/></svg>
+        </button>
+        <button class="img-ctrl-btn" onclick="resetZoom()" title="Reset Zoom">
+          <svg width="16" height="16"><use href="#i-reset"/></svg>
+        </button>
+      </div>
+
+      <!-- Keyboard shortcut hint -->
+      <div class="kb-hint" id="kbHint">Space: Play/Pause &nbsp;·&nbsp; ← →: Seek 5s &nbsp;·&nbsp; Shift+← →: Prev/Next &nbsp;·&nbsp; M: Mute &nbsp;·&nbsp; F: Fullscreen</div>
     </div>
 
-    <!-- SIDEBAR PLAYLIST -->
+    <!-- PLAYLIST SIDEBAR -->
     <div class="player-sidebar">
       <div class="sidebar-header">
         <span>Playlist</span>
-        <span id="sidebarCount" style="color:var(--accent);font-family:'Bebas Neue',sans-serif;font-size:1rem;"></span>
+        <span class="sidebar-count" id="sidebarCount"></span>
       </div>
       <div class="sidebar-search">
-        <input type="text" placeholder="Search…" id="sidebarSearch" oninput="filterSidebar(this.value)" />
+        <input type="text" placeholder="Search…" id="sidebarSearch" oninput="filterSidebar(this.value)"/>
       </div>
       <div class="sidebar-list" id="sidebarList"></div>
     </div>
-  </div>
 
-  <!-- VIDEO CONTROLS -->
+  </div><!-- /player-body -->
+
+  <!-- VIDEO CONTROLS BAR -->
   <div class="player-controls" id="videoControls">
+
     <!-- Seekbar -->
     <div class="seekbar-wrap" id="seekbarWrap">
       <div class="seekbar-track" id="seekbarTrack">
         <div class="seekbar-buffer" id="seekBuffer" style="width:0%"></div>
-        <div class="seekbar-progress" id="seekProgress" style="width:0%">
+        <div class="seekbar-fill" id="seekFill" style="width:0%">
           <div class="seekbar-thumb"></div>
         </div>
       </div>
@@ -449,18 +453,27 @@ footer { padding: 32px 48px; border-top: 1px solid var(--grey); display: flex; j
 
     <!-- Controls row -->
     <div class="controls-row">
+
       <!-- Play / Pause -->
-      <button class="ctrl-btn" id="playBtn" onclick="togglePlay()" title="Play/Pause (Space)">▶</button>
+      <button class="icon-btn" id="playBtn" onclick="togglePlay()" title="Play / Pause  Space">
+        <svg width="22" height="22" id="playIcon"><use href="#i-play"/></svg>
+      </button>
 
       <!-- Prev / Next -->
-      <button class="ctrl-btn" onclick="navigate(-1)" title="Previous (←)">⏮</button>
-      <button class="ctrl-btn" onclick="navigate(1)" title="Next (→)">⏭</button>
+      <button class="icon-btn" onclick="navigate(-1)" title="Previous">
+        <svg width="20" height="20"><use href="#i-prev"/></svg>
+      </button>
+      <button class="icon-btn" onclick="navigate(1)" title="Next">
+        <svg width="20" height="20"><use href="#i-next"/></svg>
+      </button>
 
       <!-- Volume -->
-      <div class="volume-group">
-        <button class="ctrl-btn" id="muteBtn" onclick="toggleMute()" title="Mute (M)">🔊</button>
-        <div class="volume-slider-wrap">
-          <input type="range" class="volume-slider" id="volSlider" min="0" max="1" step="0.02" value="1" oninput="setVolume(this.value)">
+      <div class="vol-group">
+        <button class="icon-btn" id="muteBtn" onclick="toggleMute()" title="Mute  M">
+          <svg width="20" height="20" id="volIcon"><use href="#i-vol"/></svg>
+        </button>
+        <div class="vol-slider-wrap">
+          <input type="range" class="vol-slider" id="volSlider" min="0" max="1" step="0.02" value="1" oninput="setVolume(this.value)">
         </div>
       </div>
 
@@ -470,36 +483,42 @@ footer { padding: 32px 48px; border-top: 1px solid var(--grey); display: flex; j
       <div class="ctrl-spacer"></div>
 
       <!-- Playback speed -->
-      <button class="ctrl-btn speed-btn" id="speedBtn" onclick="cycleSpeed()" title="Playback Speed">1×</button>
+      <button class="icon-btn speed-label" id="speedBtn" onclick="cycleSpeed()" title="Playback Speed  >">1x</button>
 
       <!-- Loop -->
-      <button class="ctrl-btn" id="loopBtn" onclick="toggleLoop()" title="Loop">↺</button>
+      <button class="icon-btn" id="loopBtn" onclick="toggleLoop()" title="Loop">
+        <svg width="20" height="20"><use href="#i-loop"/></svg>
+      </button>
 
       <!-- Autoplay -->
-      <button class="ctrl-btn" id="autoBtn" onclick="toggleAuto()" title="Autoplay">⮞</button>
+      <button class="icon-btn active" id="autoBtn" onclick="toggleAuto()" title="Autoplay">
+        <svg width="20" height="20"><use href="#i-auto"/></svg>
+      </button>
 
       <!-- Fullscreen -->
-      <button class="ctrl-btn" id="fsBtn" onclick="toggleFullscreen()" title="Fullscreen (F)">⛶</button>
-    </div>
-  </div>
+      <button class="icon-btn" id="fsBtn" onclick="toggleFullscreen()" title="Fullscreen  F">
+        <svg width="20" height="20" id="fsIcon"><use href="#i-fs"/></svg>
+      </button>
 
-</div>
+    </div>
+  </div><!-- /player-controls -->
+
+</div><!-- /player-overlay -->
 
 <footer>
   <span class="footer-copy">© 2024 Het Sonkusare — Video Editor.</span>
-  <a href="index.html" class="footer-back">← Back to Portfolio</a>
+  <a href="index.html" class="footer-back">
+    <svg width="13" height="13"><use href="#i-back"/></svg>
+    Back to Portfolio
+  </a>
 </footer>
 
 <script>
 // ============================================================
-//  MEDIA FILES LIST — ADD YOUR FILE NAMES HERE
-//  Format: { file: "filename.ext", title: "My Title" }
-//  All files must be inside the  media/  folder.
+//  MEDIA FILES LIST — your exact files
 // ============================================================
 const mediaFiles = [
-  // IMAGES
-  { file: "photo1.jpeg", title: "Photo 1" },
-  // VIDEOS
+  { file: "photo1.jpeg",  title: "Its Look Like Admin" },
   { file: "video1.mp4",  title: "Video 1" },
   { file: "video2.mp4",  title: "Video 2" },
   { file: "video3.mp4",  title: "Video 3" },
@@ -516,34 +535,27 @@ const mediaFiles = [
   { file: "video14.mov", title: "Video 14" },
 ];
 // ============================================================
-//  END OF MEDIA LIST — DO NOT EDIT BELOW UNLESS YOU KNOW JS
-// ============================================================
 
-const IMAGE_EXTS = ['jpg','jpeg','png','gif','webp','avif','bmp','svg'];
-const VIDEO_EXTS = ['mp4','webm','mov','avi','mkv','m4v','ogv'];
-
+const IMG_EXT = ['jpg','jpeg','png','gif','webp','avif','bmp','svg'];
+const VID_EXT = ['mp4','webm','mov','avi','mkv','m4v','ogv'];
 function getType(f) {
-  const ext = f.split('.').pop().toLowerCase();
-  if (IMAGE_EXTS.includes(ext)) return 'image';
-  if (VIDEO_EXTS.includes(ext)) return 'video';
-  return null;
+  const e = f.split('.').pop().toLowerCase();
+  return IMG_EXT.includes(e) ? 'image' : VID_EXT.includes(e) ? 'video' : null;
 }
 
-let allItems = mediaFiles.map(m => ({ ...m, type: getType(m.file) })).filter(m => m.type);
+let allItems      = mediaFiles.map(m => ({ ...m, type: getType(m.file) })).filter(m => m.type);
 let filteredItems = [...allItems];
-let currentIndex = 0;
-let currentVideo = null;
-let isLooping = false;
-let isAutoplay = true;
-let speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
-let speedIdx = 2;
-let imgZoom = 1;
-let currentFilter = 'all';
+let currentIndex  = 0;
+let currentVideo  = null;
+let isLooping     = false;
+let isAutoplay    = true;
+let imgZoom       = 1;
+const speeds      = [0.5, 0.75, 1, 1.25, 1.5, 2];
+let speedIdx      = 2;
 
 // ===================== BUILD GRID =====================
 function buildGrid(filter = 'all') {
-  currentFilter = filter;
-  const grid = document.getElementById('galleryGrid');
+  const grid  = document.getElementById('galleryGrid');
   const empty = document.getElementById('emptyState');
   const setup = document.getElementById('setupGuide');
   grid.innerHTML = '';
@@ -551,17 +563,15 @@ function buildGrid(filter = 'all') {
   filteredItems = filter === 'all' ? allItems : allItems.filter(i => i.type === filter);
 
   if (allItems.length === 0) {
-    empty.style.display = 'block';
-    setup.style.display = 'block';
+    empty.style.display = 'block'; setup.style.display = 'block';
     document.getElementById('pageCount').textContent = 'No media yet — see setup guide below.';
     return;
   }
-  empty.style.display = 'none';
-  setup.style.display = 'none';
+  empty.style.display = 'none'; setup.style.display = 'none';
   const imgs = allItems.filter(i => i.type === 'image').length;
   const vids = allItems.filter(i => i.type === 'video').length;
   document.getElementById('pageCount').textContent =
-    `${filteredItems.length} item${filteredItems.length !== 1 ? 's' : ''} · ${imgs} photo${imgs !== 1 ? 's' : ''} · ${vids} video${vids !== 1 ? 's' : ''}`;
+    `${filteredItems.length} items · ${imgs} photo${imgs !== 1 ? 's' : ''} · ${vids} video${vids !== 1 ? 's' : ''}`;
 
   filteredItems.forEach((item, idx) => {
     const el = document.createElement('div');
@@ -569,20 +579,23 @@ function buildGrid(filter = 'all') {
     el.style.animationDelay = (idx * 0.04) + 's';
     el.onclick = () => openPlayer(idx);
 
-    let mediaEl = '';
-    if (item.type === 'image') {
-      mediaEl = `<img src="media/${item.file}" alt="${item.title}" loading="lazy">`;
-    } else {
-      mediaEl = `<video src="media/${item.file}" muted loop preload="metadata"
-        onmouseenter="this.play()" onmouseleave="this.pause();this.currentTime=0;"></video>
-        <div class="video-badge">▶ Video</div>`;
-    }
+    const mediaEl = item.type === 'image'
+      ? `<img src="media/${item.file}" alt="${item.title}" loading="lazy">`
+      : `<video src="media/${item.file}" muted loop preload="metadata"
+           onmouseenter="this.play()" onmouseleave="this.pause();this.currentTime=0;"></video>
+         <div class="video-badge">
+           <svg width="10" height="10" style="fill:var(--black)"><use href="#i-vid"/></svg>
+           Video
+         </div>`;
+
     el.innerHTML = `${mediaEl}
       <div class="gallery-overlay">
         <div class="overlay-title">${item.title}</div>
         <div class="overlay-type">${item.type}</div>
       </div>
-      <div class="overlay-play">▶</div>`;
+      <div class="overlay-play">
+        <svg width="18" height="18" style="fill:var(--black);margin-left:3px"><use href="#i-play"/></svg>
+      </div>`;
     grid.appendChild(el);
   });
   buildSidebar();
@@ -607,43 +620,41 @@ function buildSidebar(query = '') {
     div.id = `pi-${idx}`;
     div.onclick = () => openPlayer(idx);
 
-    let thumb = '';
-    if (item.type === 'image') {
-      thumb = `<img src="media/${item.file}" alt="" loading="lazy">`;
-    } else {
-      thumb = `<video src="media/${item.file}" preload="metadata" muted></video>
-               <div class="pi-vid-icon">▶</div>`;
-    }
-    const playing = idx === currentIndex
-      ? `<div class="pi-playing"><span></span><span></span><span></span></div>` : '';
+    const thumb = item.type === 'image'
+      ? `<img src="media/${item.file}" loading="lazy" alt="">`
+      : `<video src="media/${item.file}" preload="metadata" muted></video>
+         <div class="pi-play-icon">
+           <svg width="11" height="11" style="fill:var(--accent)"><use href="#i-play"/></svg>
+         </div>`;
 
     div.innerHTML = `
       <div class="pi-thumb">${thumb}</div>
       <div class="pi-info">
         <div class="pi-title">${item.title}</div>
-        <div class="pi-type">${item.type}</div>
+        <div class="pi-meta">${item.type}</div>
       </div>
       <div class="pi-num">${idx + 1}</div>
-      ${playing}`;
+      <div class="pi-bars"><span></span><span></span><span></span></div>`;
     list.appendChild(div);
   });
 }
 
 function filterSidebar(q) { buildSidebar(q); }
 
-function scrollSidebarTo(idx) {
+function highlightSidebar(idx) {
+  document.querySelectorAll('.playlist-item').forEach((el, i) => el.classList.toggle('active', i === idx));
   const el = document.getElementById(`pi-${idx}`);
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-// ===================== PLAYER OPEN/CLOSE =====================
+// ===================== OPEN / CLOSE =====================
 function openPlayer(idx) {
   currentIndex = idx;
   document.getElementById('playerOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
   loadMedia(idx);
   buildSidebar();
-  scrollSidebarTo(idx);
+  highlightSidebar(idx);
   showKbHint();
 }
 
@@ -653,101 +664,109 @@ function closePlayer() {
   if (currentVideo) { currentVideo.pause(); currentVideo = null; }
 }
 
+// ===================== LOAD MEDIA =====================
 function loadMedia(idx) {
   if (idx < 0 || idx >= filteredItems.length) return;
   currentIndex = idx;
   const item = filteredItems[idx];
 
-  // Stop previous video
   if (currentVideo) { currentVideo.pause(); currentVideo = null; }
 
-  const wrap = document.getElementById('mediaWrap');
-  wrap.innerHTML = '';
+  const wrap    = document.getElementById('mediaWrap');
+  const ctrl    = document.getElementById('videoControls');
+  const imgCtrl = document.getElementById('imgControls');
+  const stageBg = document.getElementById('stageBg');
 
+  wrap.innerHTML = '';
   document.getElementById('playerTitle').textContent = item.title;
   document.getElementById('playerCount').textContent = `${idx + 1} / ${filteredItems.length}`;
 
-  const controls = document.getElementById('videoControls');
-  const imgCtrl = document.getElementById('imgControls');
-
   if (item.type === 'image') {
-    controls.classList.remove('visible');
+    ctrl.classList.remove('visible');
     imgCtrl.style.display = 'flex';
     imgZoom = 1;
+
     const img = document.createElement('img');
     img.src = 'media/' + item.file;
-    img.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;transform-origin:center;transition:transform 0.2s;';
-    img.id = 'activeImg';
+    img.id  = 'activeImg';
+    img.onload = () => { stageBg.style.backgroundImage = `url(media/${item.file})`; };
     wrap.appendChild(img);
 
   } else {
-    controls.classList.add('visible');
+    ctrl.classList.add('visible');
     imgCtrl.style.display = 'none';
 
     const vid = document.createElement('video');
-    vid.src = 'media/' + item.file;
-    vid.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;';
-    vid.preload = 'auto';
-    vid.volume = parseFloat(document.getElementById('volSlider').value);
+    vid.src          = 'media/' + item.file;
+    vid.preload      = 'auto';
+    vid.volume       = parseFloat(document.getElementById('volSlider').value);
     vid.playbackRate = speeds[speedIdx];
-    vid.loop = isLooping;
+    vid.loop         = isLooping;
 
-    // Events
-    vid.addEventListener('timeupdate', updateSeek);
-    vid.addEventListener('progress', updateBuffer);
+    // ── KEY FIX: detect portrait vs landscape after metadata loads ──
     vid.addEventListener('loadedmetadata', () => {
       document.getElementById('timeTot').textContent = fmtTime(vid.duration);
+
+      const isVertical = vid.videoHeight > vid.videoWidth;
+      vid.className = isVertical ? 'vid-vertical' : 'vid-horizontal';
+
+      if (isVertical) {
+        // Draw a tiny blurred frame as background
+        const canvas = document.createElement('canvas');
+        canvas.width = 8; canvas.height = 14;
+        const ctx = canvas.getContext('2d');
+        const paint = () => {
+          try { ctx.drawImage(vid, 0, 0, 8, 14); stageBg.style.backgroundImage = `url(${canvas.toDataURL()})`; }
+          catch(e) {}
+        };
+        vid.addEventListener('playing', paint, { once: true });
+        vid.addEventListener('timeupdate', paint, { once: true });
+        paint();
+      } else {
+        stageBg.style.backgroundImage = '';
+      }
     });
-    vid.addEventListener('play', () => {
-      document.getElementById('playBtn').textContent = '⏸';
-      document.getElementById('playBtn').title = 'Pause (Space)';
-    });
-    vid.addEventListener('pause', () => {
-      document.getElementById('playBtn').textContent = '▶';
-      document.getElementById('playBtn').title = 'Play (Space)';
-    });
-    vid.addEventListener('ended', () => {
-      if (!isLooping && isAutoplay && idx < filteredItems.length - 1) navigate(1);
-    });
+
+    vid.addEventListener('timeupdate',   updateSeek);
+    vid.addEventListener('progress',     updateBuffer);
+    vid.addEventListener('play',  () => setPlayIcon(false));
+    vid.addEventListener('pause', () => setPlayIcon(true));
+    vid.addEventListener('ended', () => { if (!isLooping && isAutoplay && idx < filteredItems.length - 1) navigate(1); });
     vid.addEventListener('volumechange', updateVolIcon);
 
     wrap.appendChild(vid);
     currentVideo = vid;
     vid.play().catch(() => {});
-    document.getElementById('playBtn').textContent = '⏸';
+    setPlayIcon(false);
   }
 
-  // Update sidebar highlight
-  document.querySelectorAll('.playlist-item').forEach((el, i) => {
-    el.classList.toggle('active', i === idx);
-    const playing = el.querySelector('.pi-playing');
-    if (item.type === 'video') {
-      if (i === idx && !playing) {
-        const d = document.createElement('div');
-        d.className = 'pi-playing';
-        d.innerHTML = '<span></span><span></span><span></span>';
-        el.appendChild(d);
-      } else if (i !== idx && playing) playing.remove();
-    }
-  });
-  scrollSidebarTo(idx);
+  highlightSidebar(idx);
 }
 
 function navigate(dir) {
-  const next = currentIndex + dir;
-  if (next >= 0 && next < filteredItems.length) loadMedia(next);
+  const n = currentIndex + dir;
+  if (n >= 0 && n < filteredItems.length) loadMedia(n);
 }
 
-// ===================== VIDEO CONTROLS =====================
+// ===================== PLAYBACK CONTROLS =====================
 function togglePlay() {
   if (!currentVideo) return;
-  if (currentVideo.paused) {
-    currentVideo.play();
-    flashPlay('▶');
-  } else {
-    currentVideo.pause();
-    flashPlay('⏸');
-  }
+  if (currentVideo.paused) { currentVideo.play(); triggerFlash(false); }
+  else                      { currentVideo.pause(); triggerFlash(true); }
+}
+
+function setPlayIcon(paused) {
+  document.querySelector('#playIcon use').setAttribute('href', paused ? '#i-play' : '#i-pause');
+}
+
+function triggerFlash(paused) {
+  const el  = document.getElementById('playFlash');
+  const use = document.getElementById('flashIcon').querySelector('use');
+  use.setAttribute('href', paused ? '#i-pause' : '#i-play');
+  el.classList.remove('pop', 'fade');
+  void el.offsetWidth;
+  el.classList.add('pop');
+  setTimeout(() => { el.classList.replace('pop', 'fade'); }, 380);
 }
 
 function toggleMute() {
@@ -759,16 +778,17 @@ function toggleMute() {
 function setVolume(val) {
   if (!currentVideo) return;
   currentVideo.volume = parseFloat(val);
-  currentVideo.muted = false;
+  currentVideo.muted  = false;
   updateVolIcon();
 }
 
 function updateVolIcon() {
   if (!currentVideo) return;
-  const btn = document.getElementById('muteBtn');
-  if (currentVideo.muted || currentVideo.volume === 0) btn.textContent = '🔇';
-  else if (currentVideo.volume < 0.5) btn.textContent = '🔉';
-  else btn.textContent = '🔊';
+  const use = document.querySelector('#volIcon use');
+  if (currentVideo.muted || currentVideo.volume === 0) use.setAttribute('href', '#i-mute');
+  else if (currentVideo.volume < 0.5)                  use.setAttribute('href', '#i-vol-low');
+  else                                                  use.setAttribute('href', '#i-vol');
+  document.getElementById('volSlider').value = currentVideo.muted ? 0 : currentVideo.volume;
 }
 
 function toggleLoop() {
@@ -785,58 +805,60 @@ function toggleAuto() {
 function cycleSpeed() {
   speedIdx = (speedIdx + 1) % speeds.length;
   if (currentVideo) currentVideo.playbackRate = speeds[speedIdx];
-  document.getElementById('speedBtn').textContent = speeds[speedIdx] + '×';
+  document.getElementById('speedBtn').textContent = speeds[speedIdx] + 'x';
 }
 
 function toggleFullscreen() {
   const stage = document.getElementById('playerStage');
   if (!document.fullscreenElement) {
-    stage.requestFullscreen?.() || stage.webkitRequestFullscreen?.();
+    (stage.requestFullscreen || stage.webkitRequestFullscreen)?.call(stage);
+    document.querySelector('#fsIcon use').setAttribute('href', '#i-fs-exit');
   } else {
-    document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+    (document.exitFullscreen || document.webkitExitFullscreen)?.call(document);
+    document.querySelector('#fsIcon use').setAttribute('href', '#i-fs');
   }
 }
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement)
+    document.querySelector('#fsIcon use')?.setAttribute('href', '#i-fs');
+});
 
-// SEEKBAR
+// ===================== SEEKBAR =====================
 const seekWrap = document.getElementById('seekbarWrap');
-let isSeeking = false;
-
+let isSeeking  = false;
 seekWrap.addEventListener('mousedown', e => { isSeeking = true; doSeek(e); });
-document.addEventListener('mouseup', () => { isSeeking = false; });
+document.addEventListener('mouseup',   () => { isSeeking = false; });
 document.addEventListener('mousemove', e => { if (isSeeking) doSeek(e); });
 seekWrap.addEventListener('mousemove', e => {
   const rect = document.getElementById('seekbarTrack').getBoundingClientRect();
-  const pct = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
-  const tip = document.getElementById('seekTooltip');
+  const pct  = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+  const tip  = document.getElementById('seekTooltip');
   tip.style.left = (pct * 100) + '%';
-  if (currentVideo && currentVideo.duration) {
-    tip.textContent = fmtTime(pct * currentVideo.duration);
-  }
+  if (currentVideo?.duration) tip.textContent = fmtTime(pct * currentVideo.duration);
 });
 
 function doSeek(e) {
-  if (!currentVideo) return;
+  if (!currentVideo?.duration) return;
   const rect = document.getElementById('seekbarTrack').getBoundingClientRect();
-  const pct = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
-  currentVideo.currentTime = pct * currentVideo.duration;
+  currentVideo.currentTime = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1) * currentVideo.duration;
 }
 
 function updateSeek() {
-  if (!currentVideo || !currentVideo.duration) return;
+  if (!currentVideo?.duration) return;
   const pct = (currentVideo.currentTime / currentVideo.duration) * 100;
-  document.getElementById('seekProgress').style.width = pct + '%';
-  document.getElementById('timeNow').textContent = fmtTime(currentVideo.currentTime);
+  document.getElementById('seekFill').style.width  = pct + '%';
+  document.getElementById('timeNow').textContent   = fmtTime(currentVideo.currentTime);
 }
 
 function updateBuffer() {
-  if (!currentVideo || !currentVideo.duration || !currentVideo.buffered.length) return;
+  if (!currentVideo?.duration || !currentVideo.buffered.length) return;
   const pct = (currentVideo.buffered.end(currentVideo.buffered.length - 1) / currentVideo.duration) * 100;
   document.getElementById('seekBuffer').style.width = pct + '%';
 }
 
-// ===================== IMAGE CONTROLS =====================
-function zoomImg(delta) {
-  imgZoom = Math.min(Math.max(imgZoom + delta, 0.5), 4);
+// ===================== IMAGE ZOOM =====================
+function zoomImg(d) {
+  imgZoom = Math.min(Math.max(imgZoom + d, 0.5), 4);
   const img = document.getElementById('activeImg');
   if (img) img.style.transform = `scale(${imgZoom})`;
 }
@@ -849,15 +871,8 @@ function resetZoom() {
 // ===================== HELPERS =====================
 function fmtTime(s) {
   if (!s || isNaN(s)) return '0:00';
-  const m = Math.floor(s / 60), sec = Math.floor(s % 60);
-  return m + ':' + String(sec).padStart(2, '0');
-}
-
-function flashPlay(icon) {
-  const el = document.getElementById('playFlash');
-  el.textContent = icon;
-  el.classList.add('flash');
-  setTimeout(() => el.classList.remove('flash'), 500);
+  const m = Math.floor(s / 60);
+  return m + ':' + String(Math.floor(s % 60)).padStart(2, '0');
 }
 
 let kbTimer;
@@ -865,82 +880,58 @@ function showKbHint() {
   const h = document.getElementById('kbHint');
   h.classList.add('show');
   clearTimeout(kbTimer);
-  kbTimer = setTimeout(() => h.classList.remove('show'), 3000);
+  kbTimer = setTimeout(() => h.classList.remove('show'), 3500);
 }
 
 // ===================== KEYBOARD =====================
 document.addEventListener('keydown', e => {
-  const over = document.getElementById('playerOverlay');
-  if (!over.classList.contains('open')) return;
+  if (!document.getElementById('playerOverlay').classList.contains('open')) return;
   if (e.target.tagName === 'INPUT') return;
+  const isVid = filteredItems[currentIndex]?.type === 'video';
 
-  switch(e.key) {
-    case ' ':
-    case 'k':
-      e.preventDefault();
-      if (filteredItems[currentIndex]?.type === 'video') togglePlay();
-      break;
+  switch (e.key) {
+    case ' ': case 'k':
+      e.preventDefault(); if (isVid) togglePlay(); break;
     case 'ArrowLeft':
-    case 'j':
       e.preventDefault();
-      if (currentVideo && e.key === 'j') currentVideo.currentTime -= 10;
-      else if (currentVideo && e.key === 'ArrowLeft' && !e.shiftKey) currentVideo.currentTime -= 5;
-      else navigate(-1);
-      break;
+      if (isVid && !e.shiftKey) currentVideo.currentTime -= 5; else navigate(-1); break;
     case 'ArrowRight':
-    case 'l':
       e.preventDefault();
-      if (currentVideo && e.key === 'l') currentVideo.currentTime += 10;
-      else if (currentVideo && e.key === 'ArrowRight' && !e.shiftKey) currentVideo.currentTime += 5;
-      else navigate(1);
-      break;
+      if (isVid && !e.shiftKey) currentVideo.currentTime += 5; else navigate(1); break;
+    case 'j': if (currentVideo) currentVideo.currentTime -= 10; break;
+    case 'l': if (currentVideo) currentVideo.currentTime += 10; break;
     case 'ArrowUp':
       e.preventDefault();
-      if (currentVideo) { currentVideo.volume = Math.min(1, currentVideo.volume + 0.1); document.getElementById('volSlider').value = currentVideo.volume; updateVolIcon(); }
-      break;
+      if (currentVideo) { currentVideo.volume = Math.min(1, currentVideo.volume + 0.1); document.getElementById('volSlider').value = currentVideo.volume; updateVolIcon(); } break;
     case 'ArrowDown':
       e.preventDefault();
-      if (currentVideo) { currentVideo.volume = Math.max(0, currentVideo.volume - 0.1); document.getElementById('volSlider').value = currentVideo.volume; updateVolIcon(); }
-      break;
-    case 'm':
-    case 'M':
-      toggleMute(); break;
-    case 'f':
-    case 'F':
-      toggleFullscreen(); break;
-    case 'l':
-      toggleLoop(); break;
-    case 'Escape':
-      closePlayer(); break;
-    case '>':
-      cycleSpeed(); break;
+      if (currentVideo) { currentVideo.volume = Math.max(0, currentVideo.volume - 0.1); document.getElementById('volSlider').value = currentVideo.volume; updateVolIcon(); } break;
+    case 'm': case 'M': toggleMute(); break;
+    case 'f': case 'F': toggleFullscreen(); break;
+    case '>': cycleSpeed(); break;
+    case 'Escape': closePlayer(); break;
     case '0': case '1': case '2': case '3': case '4':
     case '5': case '6': case '7': case '8': case '9':
-      if (currentVideo && currentVideo.duration) {
-        currentVideo.currentTime = (parseInt(e.key) / 10) * currentVideo.duration;
-      }
-      break;
+      if (currentVideo?.duration) currentVideo.currentTime = (parseInt(e.key) / 10) * currentVideo.duration; break;
   }
 });
 
-// Click outside video to toggle play
+// Click on stage = play/pause (video) or next (image)
 document.getElementById('playerStage').addEventListener('click', e => {
-  const isBtn = e.target.closest('button') || e.target.closest('.img-controls');
-  if (isBtn) return;
-  if (filteredItems[currentIndex]?.type === 'video') togglePlay();
-  else navigate(1);
+  if (e.target.closest('button') || e.target.closest('.img-controls')) return;
+  filteredItems[currentIndex]?.type === 'video' ? togglePlay() : navigate(1);
 });
 
-// Cursor
+// ===================== CURSOR =====================
 const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursorRing');
+const ring   = document.getElementById('cursorRing');
 let mx = 0, my = 0, rx = 0, ry = 0;
 document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-(function animateCursor() {
+(function tick() {
   cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
   rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
   ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-  requestAnimationFrame(animateCursor);
+  requestAnimationFrame(tick);
 })();
 
 // Init
