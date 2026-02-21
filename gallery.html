@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Gallery — Het Sonkusare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #080808; --white: #f0ede8; --accent: #c8ff00;
+  --grey: #1a1a1a; --mid: #333; --text-dim: #888;
+  --player-h: 9px;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; cursor: none; }
+
+/* CURSOR */
+.cursor { position: fixed; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); }
+.cursor-ring { position: fixed; width: 40px; height: 40px; border: 1px solid rgba(200,255,0,0.4); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.12s ease; }
+body:has(a:hover) .cursor-ring, body:has(button:hover) .cursor-ring, body:has(input:hover) .cursor-ring { transform: translate(-50%,-50%) scale(2); border-color: var(--accent); }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; justify-content: space-between; align-items: center; padding: 24px 48px; background: rgba(8,8,8,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+.nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.12em; color: var(--white); text-decoration: none; }
+.nav-back { color: var(--text-dim); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.3s; }
+.nav-back:hover { color: var(--accent); }
+
+/* HEADER */
+.page-header { padding: 140px 48px 48px; }
+.page-tag { font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+.page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px, 8vw, 110px); line-height: 0.95; }
+.page-title em { font-style: italic; color: var(--accent); }
+.page-count { margin-top: 18px; color: var(--text-dim); font-size: 0.85rem; letter-spacing: 0.05em; }
+
+/* FILTER */
+.filter-bar { padding: 0 48px 40px; display: flex; gap: 8px; flex-wrap: wrap; }
+.filter-btn { background: transparent; border: 1px solid var(--grey); color: var(--text-dim); font-family: 'DM Sans', sans-serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 9px 22px; cursor: none; transition: all 0.2s; }
+.filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+.filter-btn.active { background: var(--accent); border-color: var(--accent); color: var(--black); font-weight: 500; }
+
+/* GALLERY GRID */
+.gallery-grid { padding: 0 48px 80px; columns: 3; column-gap: 8px; }
+.gallery-item { break-inside: avoid; margin-bottom: 8px; position: relative; overflow: hidden; background: var(--grey); cursor: none; animation: fadeUp 0.5s ease both; }
+.gallery-item img, .gallery-item video { width: 100%; display: block; transition: transform 0.5s ease; }
+.gallery-item:hover img, .gallery-item:hover video { transform: scale(1.04); }
+.gallery-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 55%); opacity: 0; transition: opacity 0.3s; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
+.gallery-item:hover .gallery-overlay { opacity: 1; }
+.overlay-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 0.05em; }
+.overlay-type { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-top: 3px; }
+.overlay-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.7); width: 52px; height: 52px; background: var(--accent); color: var(--black); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; opacity: 0; transition: all 0.3s; padding-left: 4px; }
+.gallery-item:hover .overlay-play { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+.video-badge { position: absolute; top: 10px; left: 10px; background: rgba(200,255,0,0.9); color: var(--black); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 9px; }
+
+/* EMPTY / SETUP */
+.empty-state { padding: 80px 48px; text-align: center; display: none; }
+.empty-icon { font-size: 3.5rem; margin-bottom: 20px; opacity: 0.3; }
+.empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--text-dim); margin-bottom: 12px; }
+.empty-desc { color: var(--text-dim); font-size: 0.88rem; line-height: 1.7; max-width: 480px; margin: 0 auto; }
+.empty-desc code { background: var(--grey); padding: 2px 7px; font-family: monospace; color: var(--accent); border-radius: 2px; }
+.setup-guide { margin: 0 48px 80px; border: 1px solid var(--grey); padding: 40px; background: var(--grey); display: none; }
+.setup-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--accent); margin-bottom: 20px; }
+.step { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 14px; }
+.step-num { flex-shrink: 0; width: 26px; height: 26px; background: var(--accent); color: var(--black); font-weight: 500; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; }
+.step-text { font-size: 0.88rem; line-height: 1.6; color: #aaa; }
+.step-text code { color: var(--accent); background: rgba(200,255,0,0.1); padding: 1px 5px; font-family: monospace; border-radius: 2px; }
+.step-text strong { color: var(--white); }
+
+/* ============================================================
+   PLAYER OVERLAY (YouTube-style)
+   ============================================================ */
+.player-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.96);
+  display: none; flex-direction: column;
+  overflow: hidden;
+}
+.player-overlay.open { display: flex; }
+
+/* TOP BAR */
+.player-topbar {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 24px;
+  flex-shrink: 0;
+  background: rgba(0,0,0,0.6);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.player-close-btn {
+  background: none; border: none; color: var(--white);
+  font-size: 1.4rem; cursor: none; line-height: 1;
+  transition: color 0.2s; padding: 4px 8px;
+}
+.player-close-btn:hover { color: var(--accent); }
+.player-top-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.06em; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.player-top-count { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.1em; white-space: nowrap; }
+
+/* MAIN CONTENT AREA */
+.player-body {
+  display: flex; flex: 1; overflow: hidden;
+}
+
+/* VIDEO/IMAGE STAGE */
+.player-stage {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  background: #000; position: relative; overflow: hidden;
+}
+.player-stage img {
+  max-width: 100%; max-height: 100%;
+  object-fit: contain;
+  user-select: none;
+  display: block;
+}
+.player-stage video {
+  max-width: 100%; max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* SIDE PREV/NEXT overlays on stage */
+.stage-nav {
+  position: absolute; top: 0; bottom: 0;
+  width: 80px; display: flex; align-items: center; justify-content: center;
+  background: transparent; border: none; color: rgba(255,255,255,0); cursor: none;
+  transition: color 0.25s, background 0.25s;
+  font-size: 2rem;
+  z-index: 10;
+}
+.stage-nav:hover { color: var(--white); background: rgba(0,0,0,0.3); }
+.stage-nav-prev { left: 0; }
+.stage-nav-next { right: 0; }
+
+/* VIDEO CONTROLS BAR */
+.player-controls {
+  flex-shrink: 0;
+  background: rgba(10,10,10,0.98);
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding: 0 24px 12px;
+  display: none; /* shown only for video */
+}
+.player-controls.visible { display: block; }
+
+/* SEEKBAR */
+.seekbar-wrap {
+  position: relative; height: 20px;
+  display: flex; align-items: center;
+  cursor: none;
+}
+.seekbar-track {
+  width: 100%; height: var(--player-h);
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px; position: relative; overflow: hidden;
+  transition: height 0.15s;
+}
+.seekbar-wrap:hover .seekbar-track { height: 14px; }
+.seekbar-buffer {
+  position: absolute; top: 0; left: 0; height: 100%;
+  background: rgba(255,255,255,0.25); border-radius: 4px;
+  transition: width 0.5s;
+}
+.seekbar-progress {
+  position: absolute; top: 0; left: 0; height: 100%;
+  background: var(--accent); border-radius: 4px;
+  pointer-events: none;
+}
+.seekbar-thumb {
+  position: absolute; top: 50%; right: -6px;
+  width: 14px; height: 14px; background: var(--accent);
+  border-radius: 50%; transform: translateY(-50%) scale(0);
+  transition: transform 0.15s; pointer-events: none;
+}
+.seekbar-wrap:hover .seekbar-thumb { transform: translateY(-50%) scale(1); }
+
+/* TOOLTIP */
+.seekbar-tooltip {
+  position: absolute; bottom: 28px;
+  background: rgba(0,0,0,0.85); color: var(--white);
+  font-size: 0.72rem; padding: 3px 8px; border-radius: 3px;
+  pointer-events: none; opacity: 0; transform: translateX(-50%);
+  white-space: nowrap; transition: opacity 0.1s;
+}
+.seekbar-wrap:hover .seekbar-tooltip { opacity: 1; }
+
+/* BOTTOM CONTROLS ROW */
+.controls-row {
+  display: flex; align-items: center; gap: 12px;
+  padding-top: 8px;
+}
+.ctrl-btn {
+  background: none; border: none; color: rgba(255,255,255,0.8);
+  font-size: 1.1rem; cursor: none; padding: 6px;
+  transition: color 0.2s, transform 0.15s;
+  display: flex; align-items: center;
+}
+.ctrl-btn:hover { color: var(--accent); transform: scale(1.15); }
+.ctrl-btn.active { color: var(--accent); }
+
+/* VOLUME */
+.volume-group { display: flex; align-items: center; gap: 8px; }
+.volume-slider-wrap { width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center; }
+.volume-group:hover .volume-slider-wrap { width: 90px; }
+.volume-slider {
+  -webkit-appearance: none; appearance: none;
+  width: 90px; height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px; outline: none; cursor: none;
+}
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 12px; height: 12px;
+  background: var(--accent); border-radius: 50%; cursor: none;
+}
+.volume-slider::-moz-range-thumb { width: 12px; height: 12px; background: var(--accent); border: none; border-radius: 50%; cursor: none; }
+
+/* TIME */
+.time-display { font-size: 0.78rem; color: rgba(255,255,255,0.7); letter-spacing: 0.04em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ctrl-spacer { flex: 1; }
+
+/* PLAYBACK SPEED */
+.speed-btn { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.05em; }
+
+/* PLAYLIST SIDEBAR */
+.player-sidebar {
+  width: 300px; flex-shrink: 0;
+  background: rgba(14,14,14,0.98);
+  border-left: 1px solid rgba(255,255,255,0.06);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.sidebar-header {
+  padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-dim); flex-shrink: 0;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.sidebar-search {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+.sidebar-search input {
+  flex: 1; background: var(--grey); border: 1px solid transparent;
+  color: var(--white); font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem; padding: 7px 12px; outline: none;
+  border-radius: 2px; transition: border-color 0.2s;
+}
+.sidebar-search input:focus { border-color: var(--accent); }
+.sidebar-list { flex: 1; overflow-y: auto; }
+.sidebar-list::-webkit-scrollbar { width: 4px; }
+.sidebar-list::-webkit-scrollbar-track { background: transparent; }
+.sidebar-list::-webkit-scrollbar-thumb { background: var(--mid); border-radius: 2px; }
+
+.playlist-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px; cursor: none;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.2s;
+  position: relative;
+}
+.playlist-item:hover { background: rgba(255,255,255,0.05); }
+.playlist-item.active { background: rgba(200,255,0,0.07); border-left: 2px solid var(--accent); }
+.playlist-item.active .pi-title { color: var(--accent); }
+
+.pi-thumb {
+  width: 56px; height: 38px; flex-shrink: 0;
+  background: var(--grey); overflow: hidden; position: relative;
+  border-radius: 2px;
+}
+.pi-thumb img, .pi-thumb video { width: 100%; height: 100%; object-fit: cover; }
+.pi-vid-icon {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; color: var(--accent); background: rgba(0,0,0,0.4);
+}
+.pi-info { flex: 1; min-width: 0; }
+.pi-title { font-size: 0.8rem; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pi-type { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-top: 3px; }
+.pi-num { font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; color: var(--text-dim); flex-shrink: 0; min-width: 20px; text-align: right; }
+.pi-playing { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); }
+.pi-playing span {
+  display: inline-block; width: 3px; height: 12px; background: var(--accent);
+  margin: 0 1px; border-radius: 2px;
+  animation: barBounce 0.8s ease infinite alternate;
+}
+.pi-playing span:nth-child(2) { animation-delay: 0.2s; height: 8px; }
+.pi-playing span:nth-child(3) { animation-delay: 0.4s; height: 14px; }
+
+/* IMAGE zoom controls */
+.img-controls {
+  position: absolute; bottom: 16px; right: 16px;
+  display: flex; gap: 8px; z-index: 5;
+}
+.img-ctrl-btn {
+  background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.15);
+  color: var(--white); width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; cursor: none; border-radius: 4px;
+  transition: all 0.2s;
+}
+.img-ctrl-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* KEYBOARD HINT */
+.kb-hint {
+  position: absolute; bottom: 60px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.75); color: rgba(255,255,255,0.6);
+  font-size: 0.72rem; padding: 6px 14px; border-radius: 4px;
+  letter-spacing: 0.05em; pointer-events: none;
+  opacity: 0; transition: opacity 0.4s;
+  white-space: nowrap;
+}
+.kb-hint.show { opacity: 1; }
+
+/* BIG PLAY BUTTON FLASH */
+.play-flash {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0);
+  width: 80px; height: 80px; background: rgba(200,255,0,0.9);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; color: var(--black); pointer-events: none;
+  transition: transform 0.08s ease, opacity 0.4s ease;
+  opacity: 0; z-index: 20;
+}
+.play-flash.flash { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+
+/* FOOTER */
+footer { padding: 32px 48px; border-top: 1px solid var(--grey); display: flex; justify-content: space-between; align-items: center; }
+.footer-copy { font-size: 0.72rem; color: var(--text-dim); }
+.footer-back { font-size: 0.72rem; color: var(--text-dim); text-decoration: none; transition: color 0.3s; }
+.footer-back:hover { color: var(--accent); }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes barBounce { from { transform: scaleY(0.4); } to { transform: scaleY(1); } }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .gallery-grid { columns: 2; padding: 0 24px 48px; }
+  .page-header, .filter-bar { padding-left: 24px; padding-right: 24px; }
+  .setup-guide { margin: 0 24px 48px; }
+  .player-sidebar { width: 220px; }
+  nav { padding: 18px 24px; }
+}
+@media (max-width: 650px) {
+  .gallery-grid { columns: 1; }
+  .player-sidebar { display: none; }
+  footer { flex-direction: column; gap: 10px; padding: 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">HS.</a>
+  <a href="index.html" class="nav-back">← Back to Portfolio</a>
+</nav>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="page-tag">// Selected Work</div>
+  <h1 class="page-title">My <em>Gallery</em></h1>
+  <p class="page-count" id="pageCount">Loading…</p>
+</div>
+
+<!-- FILTER -->
+<div class="filter-bar" id="filterBar">
+  <button class="filter-btn active" onclick="filterGallery('all',this)">All</button>
+  <button class="filter-btn" onclick="filterGallery('image',this)">Photos</button>
+  <button class="filter-btn" onclick="filterGallery('video',this)">Videos</button>
+</div>
+
+<!-- GRID -->
+<div class="gallery-grid" id="galleryGrid"></div>
+<div class="empty-state" id="emptyState">
+  <div class="empty-icon">📂</div>
+  <div class="empty-title">No media found</div>
+  <div class="empty-desc">Add your files to the <code>media/</code> folder and update the list in the code below.</div>
+</div>
+<div class="setup-guide" id="setupGuide">
+  <div class="setup-title">📁 How To Add Your Media</div>
+  <div class="step"><div class="step-num">1</div><div class="step-text">Create a <code>media/</code> folder next to <code>gallery.html</code>.</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-text">Put all your <strong>images</strong> (jpg, png, webp) and <strong>videos</strong> (mp4, webm, mov) in it.</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-text">Find the <strong>MEDIA FILES LIST</strong> below in the code and add your filenames.</div></div>
+</div>
+
+<!-- ===================== PLAYER OVERLAY ===================== -->
+<div class="player-overlay" id="playerOverlay">
+
+  <!-- TOP BAR -->
+  <div class="player-topbar">
+    <button class="player-close-btn" onclick="closePlayer()" title="Close (Esc)">✕</button>
+    <div class="player-top-title" id="playerTitle">—</div>
+    <div class="player-top-count" id="playerCount">1 / 1</div>
+  </div>
+
+  <!-- BODY -->
+  <div class="player-body">
+
+    <!-- STAGE -->
+    <div class="player-stage" id="playerStage">
+
+      <!-- Prev/Next on stage -->
+      <button class="stage-nav stage-nav-prev" onclick="navigate(-1)" title="Previous (←)">‹</button>
+      <button class="stage-nav stage-nav-next" onclick="navigate(1)" title="Next (→)">›</button>
+
+      <!-- Media will be injected here -->
+      <div id="mediaWrap" style="max-width:100%;max-height:100%;display:flex;align-items:center;justify-content:center;"></div>
+
+      <!-- Play flash -->
+      <div class="play-flash" id="playFlash">▶</div>
+
+      <!-- Image controls (zoom, fit) -->
+      <div class="img-controls" id="imgControls" style="display:none;">
+        <button class="img-ctrl-btn" onclick="zoomImg(-0.25)" title="Zoom Out">−</button>
+        <button class="img-ctrl-btn" onclick="zoomImg(0.25)" title="Zoom In">+</button>
+        <button class="img-ctrl-btn" onclick="resetZoom()" title="Reset">⊡</button>
+      </div>
+
+      <!-- Keyboard hint -->
+      <div class="kb-hint" id="kbHint">Space: Play/Pause · ← → Navigate · F: Fullscreen · M: Mute</div>
+    </div>
+
+    <!-- SIDEBAR PLAYLIST -->
+    <div class="player-sidebar">
+      <div class="sidebar-header">
+        <span>Playlist</span>
+        <span id="sidebarCount" style="color:var(--accent);font-family:'Bebas Neue',sans-serif;font-size:1rem;"></span>
+      </div>
+      <div class="sidebar-search">
+        <input type="text" placeholder="Search…" id="sidebarSearch" oninput="filterSidebar(this.value)" />
+      </div>
+      <div class="sidebar-list" id="sidebarList"></div>
+    </div>
+  </div>
+
+  <!-- VIDEO CONTROLS -->
+  <div class="player-controls" id="videoControls">
+    <!-- Seekbar -->
+    <div class="seekbar-wrap" id="seekbarWrap">
+      <div class="seekbar-track" id="seekbarTrack">
+        <div class="seekbar-buffer" id="seekBuffer" style="width:0%"></div>
+        <div class="seekbar-progress" id="seekProgress" style="width:0%">
+          <div class="seekbar-thumb"></div>
+        </div>
+      </div>
+      <div class="seekbar-tooltip" id="seekTooltip">0:00</div>
+    </div>
+
+    <!-- Controls row -->
+    <div class="controls-row">
+      <!-- Play / Pause -->
+      <button class="ctrl-btn" id="playBtn" onclick="togglePlay()" title="Play/Pause (Space)">▶</button>
+
+      <!-- Prev / Next -->
+      <button class="ctrl-btn" onclick="navigate(-1)" title="Previous (←)">⏮</button>
+      <button class="ctrl-btn" onclick="navigate(1)" title="Next (→)">⏭</button>
+
+      <!-- Volume -->
+      <div class="volume-group">
+        <button class="ctrl-btn" id="muteBtn" onclick="toggleMute()" title="Mute (M)">🔊</button>
+        <div class="volume-slider-wrap">
+          <input type="range" class="volume-slider" id="volSlider" min="0" max="1" step="0.02" value="1" oninput="setVolume(this.value)">
+        </div>
+      </div>
+
+      <!-- Time -->
+      <div class="time-display"><span id="timeNow">0:00</span> / <span id="timeTot">0:00</span></div>
+
+      <div class="ctrl-spacer"></div>
+
+      <!-- Playback speed -->
+      <button class="ctrl-btn speed-btn" id="speedBtn" onclick="cycleSpeed()" title="Playback Speed">1×</button>
+
+      <!-- Loop -->
+      <button class="ctrl-btn" id="loopBtn" onclick="toggleLoop()" title="Loop">↺</button>
+
+      <!-- Autoplay -->
+      <button class="ctrl-btn" id="autoBtn" onclick="toggleAuto()" title="Autoplay">⮞</button>
+
+      <!-- Fullscreen -->
+      <button class="ctrl-btn" id="fsBtn" onclick="toggleFullscreen()" title="Fullscreen (F)">⛶</button>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span class="footer-copy">© 2024 Het Sonkusare — Video Editor.</span>
+  <a href="index.html" class="footer-back">← Back to Portfolio</a>
+</footer>
+
+<script>
+// ============================================================
+//  MEDIA FILES LIST — ADD YOUR FILE NAMES HERE
+//  Format: { file: "filename.ext", title: "My Title" }
+//  All files must be inside the  media/  folder.
+// ============================================================
+const mediaFiles = [
+  // VIDEOS — your files from old portfolio:
+  // { file: "1.mp4",  title: "Brand Commercial" },
+  // { file: "2.mp4",  title: "Music Video" },
+  // { file: "3.mp4",  title: "Documentary Film" },
+  // { file: "4.mp4",  title: "Social Media Campaign" },
+  // { file: "5.mov",  title: "Wedding Highlight Film" },
+  // { file: "6.mov",  title: "Corporate Presentation" },
+  // { file: "7.mov",  title: "Corporate Presentation 2" },
+  // { file: "8.mp4",  title: "Corporate Presentation 3" },
+  // IMAGES:
+  // { file: "photo1.jpg", title: "My Photo" },
+];
+// ============================================================
+//  END OF MEDIA LIST — DO NOT EDIT BELOW UNLESS YOU KNOW JS
+// ============================================================
+
+const IMAGE_EXTS = ['jpg','jpeg','png','gif','webp','avif','bmp','svg'];
+const VIDEO_EXTS = ['mp4','webm','mov','avi','mkv','m4v','ogv'];
+
+function getType(f) {
+  const ext = f.split('.').pop().toLowerCase();
+  if (IMAGE_EXTS.includes(ext)) return 'image';
+  if (VIDEO_EXTS.includes(ext)) return 'video';
+  return null;
+}
+
+let allItems = mediaFiles.map(m => ({ ...m, type: getType(m.file) })).filter(m => m.type);
+let filteredItems = [...allItems];
+let currentIndex = 0;
+let currentVideo = null;
+let isLooping = false;
+let isAutoplay = true;
+let speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
+let speedIdx = 2;
+let imgZoom = 1;
+let currentFilter = 'all';
+
+// ===================== BUILD GRID =====================
+function buildGrid(filter = 'all') {
+  currentFilter = filter;
+  const grid = document.getElementById('galleryGrid');
+  const empty = document.getElementById('emptyState');
+  const setup = document.getElementById('setupGuide');
+  grid.innerHTML = '';
+
+  filteredItems = filter === 'all' ? allItems : allItems.filter(i => i.type === filter);
+
+  if (allItems.length === 0) {
+    empty.style.display = 'block';
+    setup.style.display = 'block';
+    document.getElementById('pageCount').textContent = 'No media yet — see setup guide below.';
+    return;
+  }
+  empty.style.display = 'none';
+  setup.style.display = 'none';
+  const imgs = allItems.filter(i => i.type === 'image').length;
+  const vids = allItems.filter(i => i.type === 'video').length;
+  document.getElementById('pageCount').textContent =
+    `${filteredItems.length} item${filteredItems.length !== 1 ? 's' : ''} · ${imgs} photo${imgs !== 1 ? 's' : ''} · ${vids} video${vids !== 1 ? 's' : ''}`;
+
+  filteredItems.forEach((item, idx) => {
+    const el = document.createElement('div');
+    el.className = 'gallery-item';
+    el.style.animationDelay = (idx * 0.04) + 's';
+    el.onclick = () => openPlayer(idx);
+
+    let mediaEl = '';
+    if (item.type === 'image') {
+      mediaEl = `<img src="media/${item.file}" alt="${item.title}" loading="lazy">`;
+    } else {
+      mediaEl = `<video src="media/${item.file}" muted loop preload="metadata"
+        onmouseenter="this.play()" onmouseleave="this.pause();this.currentTime=0;"></video>
+        <div class="video-badge">▶ Video</div>`;
+    }
+    el.innerHTML = `${mediaEl}
+      <div class="gallery-overlay">
+        <div class="overlay-title">${item.title}</div>
+        <div class="overlay-type">${item.type}</div>
+      </div>
+      <div class="overlay-play">▶</div>`;
+    grid.appendChild(el);
+  });
+  buildSidebar();
+}
+
+function filterGallery(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildGrid(type);
+}
+
+// ===================== SIDEBAR =====================
+function buildSidebar(query = '') {
+  const list = document.getElementById('sidebarList');
+  list.innerHTML = '';
+  document.getElementById('sidebarCount').textContent = filteredItems.length;
+
+  filteredItems.forEach((item, idx) => {
+    if (query && !item.title.toLowerCase().includes(query.toLowerCase())) return;
+    const div = document.createElement('div');
+    div.className = 'playlist-item' + (idx === currentIndex ? ' active' : '');
+    div.id = `pi-${idx}`;
+    div.onclick = () => openPlayer(idx);
+
+    let thumb = '';
+    if (item.type === 'image') {
+      thumb = `<img src="media/${item.file}" alt="" loading="lazy">`;
+    } else {
+      thumb = `<video src="media/${item.file}" preload="metadata" muted></video>
+               <div class="pi-vid-icon">▶</div>`;
+    }
+    const playing = idx === currentIndex
+      ? `<div class="pi-playing"><span></span><span></span><span></span></div>` : '';
+
+    div.innerHTML = `
+      <div class="pi-thumb">${thumb}</div>
+      <div class="pi-info">
+        <div class="pi-title">${item.title}</div>
+        <div class="pi-type">${item.type}</div>
+      </div>
+      <div class="pi-num">${idx + 1}</div>
+      ${playing}`;
+    list.appendChild(div);
+  });
+}
+
+function filterSidebar(q) { buildSidebar(q); }
+
+function scrollSidebarTo(idx) {
+  const el = document.getElementById(`pi-${idx}`);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ===================== PLAYER OPEN/CLOSE =====================
+function openPlayer(idx) {
+  currentIndex = idx;
+  document.getElementById('playerOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  loadMedia(idx);
+  buildSidebar();
+  scrollSidebarTo(idx);
+  showKbHint();
+}
+
+function closePlayer() {
+  document.getElementById('playerOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  if (currentVideo) { currentVideo.pause(); currentVideo = null; }
+}
+
+function loadMedia(idx) {
+  if (idx < 0 || idx >= filteredItems.length) return;
+  currentIndex = idx;
+  const item = filteredItems[idx];
+
+  // Stop previous video
+  if (currentVideo) { currentVideo.pause(); currentVideo = null; }
+
+  const wrap = document.getElementById('mediaWrap');
+  wrap.innerHTML = '';
+
+  document.getElementById('playerTitle').textContent = item.title;
+  document.getElementById('playerCount').textContent = `${idx + 1} / ${filteredItems.length}`;
+
+  const controls = document.getElementById('videoControls');
+  const imgCtrl = document.getElementById('imgControls');
+
+  if (item.type === 'image') {
+    controls.classList.remove('visible');
+    imgCtrl.style.display = 'flex';
+    imgZoom = 1;
+    const img = document.createElement('img');
+    img.src = 'media/' + item.file;
+    img.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;transform-origin:center;transition:transform 0.2s;';
+    img.id = 'activeImg';
+    wrap.appendChild(img);
+
+  } else {
+    controls.classList.add('visible');
+    imgCtrl.style.display = 'none';
+
+    const vid = document.createElement('video');
+    vid.src = 'media/' + item.file;
+    vid.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;';
+    vid.preload = 'auto';
+    vid.volume = parseFloat(document.getElementById('volSlider').value);
+    vid.playbackRate = speeds[speedIdx];
+    vid.loop = isLooping;
+
+    // Events
+    vid.addEventListener('timeupdate', updateSeek);
+    vid.addEventListener('progress', updateBuffer);
+    vid.addEventListener('loadedmetadata', () => {
+      document.getElementById('timeTot').textContent = fmtTime(vid.duration);
+    });
+    vid.addEventListener('play', () => {
+      document.getElementById('playBtn').textContent = '⏸';
+      document.getElementById('playBtn').title = 'Pause (Space)';
+    });
+    vid.addEventListener('pause', () => {
+      document.getElementById('playBtn').textContent = '▶';
+      document.getElementById('playBtn').title = 'Play (Space)';
+    });
+    vid.addEventListener('ended', () => {
+      if (!isLooping && isAutoplay && idx < filteredItems.length - 1) navigate(1);
+    });
+    vid.addEventListener('volumechange', updateVolIcon);
+
+    wrap.appendChild(vid);
+    currentVideo = vid;
+    vid.play().catch(() => {});
+    document.getElementById('playBtn').textContent = '⏸';
+  }
+
+  // Update sidebar highlight
+  document.querySelectorAll('.playlist-item').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+    const playing = el.querySelector('.pi-playing');
+    if (item.type === 'video') {
+      if (i === idx && !playing) {
+        const d = document.createElement('div');
+        d.className = 'pi-playing';
+        d.innerHTML = '<span></span><span></span><span></span>';
+        el.appendChild(d);
+      } else if (i !== idx && playing) playing.remove();
+    }
+  });
+  scrollSidebarTo(idx);
+}
+
+function navigate(dir) {
+  const next = currentIndex + dir;
+  if (next >= 0 && next < filteredItems.length) loadMedia(next);
+}
+
+// ===================== VIDEO CONTROLS =====================
+function togglePlay() {
+  if (!currentVideo) return;
+  if (currentVideo.paused) {
+    currentVideo.play();
+    flashPlay('▶');
+  } else {
+    currentVideo.pause();
+    flashPlay('⏸');
+  }
+}
+
+function toggleMute() {
+  if (!currentVideo) return;
+  currentVideo.muted = !currentVideo.muted;
+  updateVolIcon();
+}
+
+function setVolume(val) {
+  if (!currentVideo) return;
+  currentVideo.volume = parseFloat(val);
+  currentVideo.muted = false;
+  updateVolIcon();
+}
+
+function updateVolIcon() {
+  if (!currentVideo) return;
+  const btn = document.getElementById('muteBtn');
+  if (currentVideo.muted || currentVideo.volume === 0) btn.textContent = '🔇';
+  else if (currentVideo.volume < 0.5) btn.textContent = '🔉';
+  else btn.textContent = '🔊';
+}
+
+function toggleLoop() {
+  isLooping = !isLooping;
+  if (currentVideo) currentVideo.loop = isLooping;
+  document.getElementById('loopBtn').classList.toggle('active', isLooping);
+}
+
+function toggleAuto() {
+  isAutoplay = !isAutoplay;
+  document.getElementById('autoBtn').classList.toggle('active', isAutoplay);
+}
+
+function cycleSpeed() {
+  speedIdx = (speedIdx + 1) % speeds.length;
+  if (currentVideo) currentVideo.playbackRate = speeds[speedIdx];
+  document.getElementById('speedBtn').textContent = speeds[speedIdx] + '×';
+}
+
+function toggleFullscreen() {
+  const stage = document.getElementById('playerStage');
+  if (!document.fullscreenElement) {
+    stage.requestFullscreen?.() || stage.webkitRequestFullscreen?.();
+  } else {
+    document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+  }
+}
+
+// SEEKBAR
+const seekWrap = document.getElementById('seekbarWrap');
+let isSeeking = false;
+
+seekWrap.addEventListener('mousedown', e => { isSeeking = true; doSeek(e); });
+document.addEventListener('mouseup', () => { isSeeking = false; });
+document.addEventListener('mousemove', e => { if (isSeeking) doSeek(e); });
+seekWrap.addEventListener('mousemove', e => {
+  const rect = document.getElementById('seekbarTrack').getBoundingClientRect();
+  const pct = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+  const tip = document.getElementById('seekTooltip');
+  tip.style.left = (pct * 100) + '%';
+  if (currentVideo && currentVideo.duration) {
+    tip.textContent = fmtTime(pct * currentVideo.duration);
+  }
+});
+
+function doSeek(e) {
+  if (!currentVideo) return;
+  const rect = document.getElementById('seekbarTrack').getBoundingClientRect();
+  const pct = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+  currentVideo.currentTime = pct * currentVideo.duration;
+}
+
+function updateSeek() {
+  if (!currentVideo || !currentVideo.duration) return;
+  const pct = (currentVideo.currentTime / currentVideo.duration) * 100;
+  document.getElementById('seekProgress').style.width = pct + '%';
+  document.getElementById('timeNow').textContent = fmtTime(currentVideo.currentTime);
+}
+
+function updateBuffer() {
+  if (!currentVideo || !currentVideo.duration || !currentVideo.buffered.length) return;
+  const pct = (currentVideo.buffered.end(currentVideo.buffered.length - 1) / currentVideo.duration) * 100;
+  document.getElementById('seekBuffer').style.width = pct + '%';
+}
+
+// ===================== IMAGE CONTROLS =====================
+function zoomImg(delta) {
+  imgZoom = Math.min(Math.max(imgZoom + delta, 0.5), 4);
+  const img = document.getElementById('activeImg');
+  if (img) img.style.transform = `scale(${imgZoom})`;
+}
+function resetZoom() {
+  imgZoom = 1;
+  const img = document.getElementById('activeImg');
+  if (img) img.style.transform = 'scale(1)';
+}
+
+// ===================== HELPERS =====================
+function fmtTime(s) {
+  if (!s || isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+  return m + ':' + String(sec).padStart(2, '0');
+}
+
+function flashPlay(icon) {
+  const el = document.getElementById('playFlash');
+  el.textContent = icon;
+  el.classList.add('flash');
+  setTimeout(() => el.classList.remove('flash'), 500);
+}
+
+let kbTimer;
+function showKbHint() {
+  const h = document.getElementById('kbHint');
+  h.classList.add('show');
+  clearTimeout(kbTimer);
+  kbTimer = setTimeout(() => h.classList.remove('show'), 3000);
+}
+
+// ===================== KEYBOARD =====================
+document.addEventListener('keydown', e => {
+  const over = document.getElementById('playerOverlay');
+  if (!over.classList.contains('open')) return;
+  if (e.target.tagName === 'INPUT') return;
+
+  switch(e.key) {
+    case ' ':
+    case 'k':
+      e.preventDefault();
+      if (filteredItems[currentIndex]?.type === 'video') togglePlay();
+      break;
+    case 'ArrowLeft':
+    case 'j':
+      e.preventDefault();
+      if (currentVideo && e.key === 'j') currentVideo.currentTime -= 10;
+      else if (currentVideo && e.key === 'ArrowLeft' && !e.shiftKey) currentVideo.currentTime -= 5;
+      else navigate(-1);
+      break;
+    case 'ArrowRight':
+    case 'l':
+      e.preventDefault();
+      if (currentVideo && e.key === 'l') currentVideo.currentTime += 10;
+      else if (currentVideo && e.key === 'ArrowRight' && !e.shiftKey) currentVideo.currentTime += 5;
+      else navigate(1);
+      break;
+    case 'ArrowUp':
+      e.preventDefault();
+      if (currentVideo) { currentVideo.volume = Math.min(1, currentVideo.volume + 0.1); document.getElementById('volSlider').value = currentVideo.volume; updateVolIcon(); }
+      break;
+    case 'ArrowDown':
+      e.preventDefault();
+      if (currentVideo) { currentVideo.volume = Math.max(0, currentVideo.volume - 0.1); document.getElementById('volSlider').value = currentVideo.volume; updateVolIcon(); }
+      break;
+    case 'm':
+    case 'M':
+      toggleMute(); break;
+    case 'f':
+    case 'F':
+      toggleFullscreen(); break;
+    case 'l':
+      toggleLoop(); break;
+    case 'Escape':
+      closePlayer(); break;
+    case '>':
+      cycleSpeed(); break;
+    case '0': case '1': case '2': case '3': case '4':
+    case '5': case '6': case '7': case '8': case '9':
+      if (currentVideo && currentVideo.duration) {
+        currentVideo.currentTime = (parseInt(e.key) / 10) * currentVideo.duration;
+      }
+      break;
+  }
+});
+
+// Click outside video to toggle play
+document.getElementById('playerStage').addEventListener('click', e => {
+  const isBtn = e.target.closest('button') || e.target.closest('.img-controls');
+  if (isBtn) return;
+  if (filteredItems[currentIndex]?.type === 'video') togglePlay();
+  else navigate(1);
+});
+
+// Cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function animateCursor() {
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animateCursor);
+})();
+
+// Init
+buildGrid();
+</script>
+</body>
+</html>
