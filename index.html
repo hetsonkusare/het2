@@ -58,7 +58,21 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;backg
 .mobile-nav a:hover{color:var(--luffy)}
 
 /* ─── HERO ─── */
-#hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 52px 80px;margin-top:58px;position:relative;overflow:hidden}
+#hero{min-height:100vh;min-height:100svh;display:grid;grid-template-columns:1fr 400px;align-items:end;padding:0 52px 80px;margin-top:58px;position:relative;overflow:hidden;gap:0 52px}
+.hero-content{display:flex;flex-direction:column;justify-content:flex-end;position:relative;z-index:2}
+
+/* Hero photo column */
+.hero-photo-col{position:relative;z-index:2;display:flex;align-items:flex-end;justify-content:center;height:100%;padding-top:40px}
+.hero-photo-frame{position:relative;width:100%;height:calc(100vh - 58px - 60px);max-height:680px;min-height:400px;display:flex;align-items:stretch}
+.hero-photo-frame::after{content:'';position:absolute;top:20px;right:-14px;bottom:-14px;left:14px;border:2px solid var(--luffy);border-radius:4px;z-index:0;opacity:0.25;pointer-events:none}
+.hero-photo-img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;border-radius:4px;position:relative;z-index:1;filter:contrast(1.05) saturate(1.1)}
+.hero-photo-ghost{width:100%;height:100%;border-radius:4px;background:linear-gradient(160deg,rgba(232,35,26,0.1) 0%,rgba(13,10,8,0.85) 100%);border:2px dashed var(--border2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;position:relative;z-index:1}
+.hero-photo-ghost svg{opacity:0.18;color:var(--luffy)}
+.hero-photo-ghost-text{font-family:var(--mono);font-size:0.52rem;letter-spacing:0.18em;color:var(--dim2);text-transform:uppercase;text-align:center;line-height:2.2}
+.hero-photo-glow{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);width:80%;height:180px;background:radial-gradient(ellipse,rgba(232,35,26,0.2) 0%,transparent 70%);pointer-events:none;z-index:0}
+.hero-photo-tag{position:absolute;bottom:22px;left:0;right:0;z-index:3;background:rgba(10,7,3,0.9);border-top:2px solid var(--luffy);padding:12px 18px;text-align:center;backdrop-filter:blur(12px)}
+.hero-photo-tag-name{font-family:var(--display);font-size:1.1rem;letter-spacing:0.1em;color:var(--white);line-height:1}
+.hero-photo-tag-role{font-family:var(--mono);font-size:0.5rem;letter-spacing:0.18em;color:var(--luffy);text-transform:uppercase;margin-top:5px}
 
 /* Grand Line horizon */
 .hero-horizon{position:absolute;bottom:0;left:0;right:0;height:45%;background:linear-gradient(to top,rgba(21,101,168,0.3) 0%,transparent 100%);pointer-events:none;z-index:0}
@@ -71,7 +85,7 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;backg
 @keyframes waveMove2{from{transform:translateX(0) scaleY(0.85)}to{transform:translateX(-45px) scaleY(1)}}
 
 /* Anime panel (desktop only) */
-.hero-panel-deco{position:absolute;top:72px;right:52px;width:196px;background:rgba(13,10,8,0.88);border:2px solid var(--border2);border-top:3px solid var(--luffy);padding:14px;pointer-events:none;display:flex;flex-direction:column;gap:8px}
+.hero-panel-deco{position:absolute;bottom:90px;left:52px;width:180px;background:rgba(13,10,8,0.92);border:2px solid var(--border2);border-top:3px solid var(--luffy);padding:14px;pointer-events:none;display:flex;flex-direction:column;gap:8px;backdrop-filter:blur(8px);z-index:3}
 .panel-label{font-family:var(--mono);font-size:0.5rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--luffy);margin-bottom:2px}
 .panel-bars{display:flex;align-items:flex-end;gap:3px;height:48px}
 .panel-bar{flex:1;border-radius:2px 2px 0 0}
@@ -136,7 +150,7 @@ section{position:relative;z-index:1}
 .reveal.visible{opacity:1;transform:translateY(0)}
 
 /* ─── ABOUT ─── */
-#about{padding:120px 52px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1.1fr;gap:80px;align-items:start}
+#about{padding:120px 52px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 300px;gap:80px;align-items:start}
 .about-num-row{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-top:40px}
 .about-num{padding:22px 18px;background:var(--bg2);position:relative;overflow:hidden;transition:background 0.3s}
 .about-num::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--luffy),var(--straw));transform:scaleX(0);transform-origin:left;transition:transform 0.4s}
@@ -152,6 +166,19 @@ section{position:relative;z-index:1}
 .tools-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:26px}
 .tool-badge{font-family:var(--mono);font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;padding:5px 11px;border-radius:3px;border:1px solid var(--border2);color:var(--dim);background:rgba(232,35,26,0.05);transition:all 0.25s;cursor:default}
 .tool-badge:hover{border-color:var(--luffy);color:var(--luffy);background:rgba(232,35,26,0.1)}
+
+/* About photo (right column) */
+.about-photo-col{display:flex;flex-direction:column;gap:16px;align-items:center;padding-top:8px}
+.about-photo-wrap{position:relative;width:100%}
+.about-photo-wrap::before{content:'';position:absolute;top:14px;left:-14px;right:14px;bottom:-14px;border:2px solid var(--straw);border-radius:4px;z-index:0;opacity:0.22}
+.about-photo{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top center;display:block;border-radius:4px;position:relative;z-index:1;filter:contrast(1.04) saturate(1.1);border:1px solid var(--border2)}
+.about-photo-placeholder{width:100%;aspect-ratio:3/4;background:var(--panel);border:2px dashed var(--border2);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;position:relative;z-index:1}
+.about-photo-placeholder svg{opacity:0.18;color:var(--luffy)}
+.about-photo-placeholder-text{font-family:var(--mono);font-size:0.5rem;letter-spacing:0.14em;color:var(--dim2);text-transform:uppercase;text-align:center;line-height:2.2}
+.about-avail-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(232,35,26,0.07);border:1px solid rgba(232,35,26,0.22);padding:7px 14px;border-radius:3px;width:100%;justify-content:center}
+.about-avail-dot{width:6px;height:6px;border-radius:50%;background:var(--luffy);box-shadow:0 0 6px var(--luffy);animation:blink 1.8s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+.about-avail-text{font-family:var(--mono);font-size:0.5rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--luffy)}
 
 /* ─── SERVICES ─── */
 #services{padding:120px 52px;border-top:1px solid var(--border)}
@@ -212,6 +239,7 @@ footer{padding:22px 52px;background:var(--bg2);border-top:2px solid var(--luffy)
 @media(max-width:1100px){
   .services-grid{grid-template-columns:1fr 1fr}
   .hero-panel-deco{display:none}
+  #hero{grid-template-columns:1fr 320px;gap:0 32px}
 }
 @media(max-width:900px){
   body{cursor:auto}.cursor,.cursor-ring{display:none}
@@ -219,8 +247,15 @@ footer{padding:22px 52px;background:var(--bg2);border-top:2px solid var(--luffy)
   nav{padding:0 16px}
   .nav-links,.nav-bounty{display:none}
   .nav-hamburger{display:flex}.mobile-nav{display:flex}
-  #hero{padding:0 20px 60px}
+  /* Hero stacks: photo on top, text below */
+  #hero{grid-template-columns:1fr;grid-template-rows:auto auto;align-items:start;padding:20px 20px 52px;gap:32px 0}
+  .hero-photo-col{order:-1;height:55vw;min-height:240px;max-height:380px;padding-top:0}
+  .hero-photo-frame{height:100%;max-height:none;min-height:unset}
+  .hero-photo-tag{display:none}
   #about{grid-template-columns:1fr;gap:48px;padding:80px 20px}
+  .about-photo-col{flex-direction:row;align-items:flex-start;gap:20px}
+  .about-photo-wrap{max-width:160px;flex-shrink:0}
+  .about-avail-badge{width:auto}
   #contact{grid-template-columns:1fr;gap:48px;padding:80px 20px}
   #services,#skills{padding:80px 20px}
   .services-grid{grid-template-columns:1fr}
@@ -229,10 +264,13 @@ footer{padding:22px 52px;background:var(--bg2);border-top:2px solid var(--luffy)
   .hero-scroll{display:none}
 }
 @media(max-width:640px){
-  #hero{padding:0 16px 52px}
+  #hero{padding:16px 16px 48px}
+  .hero-photo-col{height:60vw;max-height:300px}
   .hero-actions{flex-direction:column;align-items:flex-start;gap:10px}
   .btn-primary,.btn-ghost{width:100%;justify-content:center}
   footer{flex-direction:column;text-align:center;gap:10px}
+  .about-photo-col{flex-direction:column;align-items:flex-start}
+  .about-photo-wrap{max-width:100%}
 }
 @media(max-width:400px){
   .nav-logo{font-size:1.3rem}
@@ -312,7 +350,7 @@ footer{padding:22px 52px;background:var(--bg2);border-top:2px solid var(--luffy)
       <ellipse cx="18" cy="18" rx="7" ry="7" fill="#0d0a08" opacity="0.25"/>
       <path d="M8 22 Q18 27 28 22" stroke="#e8231a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
     </svg>
-    HS.
+    HS
   </a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
@@ -345,7 +383,68 @@ footer{padding:22px 52px;background:var(--bg2);border-top:2px solid var(--luffy)
     </svg>
   </div>
 
-  <div class="hero-panel-deco">
+  <!-- LEFT: text content -->
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      After Effects &amp; Premiere Pro Specialist
+    </div>
+    <p class="hero-slogan">"As long as I'm alive, there are <em>infinite chances.</em>"</p>
+
+    <h1 class="hero-title">
+      <span class="name-het">Het</span>
+      <span class="name-son">Son</span><span class="name-kusare">kusare</span>
+      <span class="name-edits">// Motion Designer</span>
+    </h1>
+
+    <p class="hero-sub">Transforming raw footage into captivating stories. With a sharp eye for detail and a passion for motion, I bring your vision to life — frame by frame.</p>
+
+    <div class="hero-actions">
+      <a href="gallery.html" class="btn-primary">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none"/></svg>
+        View My Work
+      </a>
+      <a href="#contact" class="btn-ghost">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="3"/><line x1="12" y1="8" x2="12" y2="22"/><path d="M5 15H2a10 10 0 0 0 20 0h-3"/><line x1="6" y1="10" x2="18" y2="10"/></svg>
+        Hire Me
+      </a>
+    </div>
+
+    <div class="hero-socials">
+      <a href="https://www.instagram.com/hetiiiyooo/?hl=en" target="_blank">Instagram</a>
+      <a href="https://www.linkedin.com/in/het-sonkusare-802227312/" target="_blank">LinkedIn</a>
+      <a href="resume.pdf" target="_blank">Resume ↓</a>
+    </div>
+
+    <!-- <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span class="scroll-label">Scroll</span>
+    </div> -->
+  </div>
+
+  <!-- RIGHT: profile photo -->
+  <div class="hero-photo-col">
+    <div class="hero-photo-glow"></div>
+    <div class="hero-photo-frame">
+      <!-- Replace src with your photo path e.g. media/profile.jpg -->
+      <img
+        src="media/profile.jpeg"
+        alt="Het Sonkusare"
+        class="hero-photo-img"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+      />
+      <div class="hero-photo-ghost" style="display:none">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="8" r="4.5"/><path d="M3 21c0-5 4-8.5 9-8.5s9 3.5 9 8.5"/></svg>
+        <div class="hero-photo-ghost-text">Place your photo at<br>media/profile.jpeg</div>
+      </div>
+      <div class="hero-photo-tag">
+        <div class="hero-photo-tag-name">Het Sonkusare</div>
+        <div class="hero-photo-tag-role">Motion Designer · Video Editor</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="hero-panel-deco">
     <div class="panel-label">Lumetri · Live</div>
     <div class="panel-bars">
       <div class="panel-bar" style="height:28%;background:var(--straw)"></div>
@@ -360,43 +459,8 @@ footer{padding:22px 52px;background:var(--bg2);border-top:2px solid var(--luffy)
     <div class="panel-stat"><span>Exp</span><span>+0.24</span></div>
     <div class="panel-stat"><span>Sat</span><span>1.08</span></div>
     <div class="panel-stat"><span>Temp</span><span>5600K</span></div>
-  </div>
+  </div> -->
 
-  <div class="hero-eyebrow">
-    <div class="eyebrow-line"></div>
-    After Effects &amp; Premiere Pro Specialist
-  </div>
-  <p class="hero-slogan">"As long as I'm alive, there are <em>infinite chances.</em>"</p>
-
-  <h1 class="hero-title">
-    <span class="name-het">Het</span>
-    <span class="name-son">Son</span><span class="name-kusare">kusare</span>
-    <span class="name-edits">// Motion Designer</span>
-  </h1>
-
-  <p class="hero-sub">Transforming raw footage into captivating stories. With a sharp eye for detail and a passion for motion, I bring your vision to life — frame by frame.</p>
-
-  <div class="hero-actions">
-    <a href="gallery.html" class="btn-primary">
-      <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none"/></svg>
-      View My Work
-    </a>
-    <a href="#contact" class="btn-ghost">
-      <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="3"/><line x1="12" y1="8" x2="12" y2="22"/><path d="M5 15H2a10 10 0 0 0 20 0h-3"/><line x1="6" y1="10" x2="18" y2="10"/></svg>
-      Hire Me
-    </a>
-  </div>
-
-  <div class="hero-socials">
-    <a href="https://www.instagram.com/hetiiiyooo/?hl=en" target="_blank">Instagram</a>
-    <a href="https://www.linkedin.com/in/het-sonkusare-802227312/" target="_blank">LinkedIn</a>
-    <a href="resume.pdf" target="_blank">Resume ↓</a>
-  </div>
-
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    <span class="scroll-label">Scroll</span>
-  </div>
 </section>
 
 <!-- TICKER -->
@@ -430,8 +494,6 @@ footer{padding:22px 52px;background:var(--bg2);border-top:2px solid var(--luffy)
       <div class="about-num"><div class="num-val">50+</div><div class="num-label">Happy Clients</div></div>
       <div class="about-num"><div class="num-val">8</div><div class="num-label">Project Types</div></div>
     </div>
-  </div>
-  <div class="reveal" style="transition-delay:0.15s">
     <div class="about-text">
       <p>I'm Het Sonkusare, a dedicated video editor and motion designer specializing in After Effects and Premiere Pro. My journey began with a fascination for how powerful editing can transform a simple clip into an emotional experience.</p>
       <p>From dynamic motion graphics and visual effects to seamless Lumetri color grading and professional audio mixing — I master every aspect of the Adobe creative workflow.</p>
@@ -447,6 +509,27 @@ footer{padding:22px 52px;background:var(--bg2);border-top:2px solid var(--luffy)
       <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       Hire Me
     </a>
+  </div>
+
+  <!-- RIGHT: profile photo -->
+  <div class="about-photo-col reveal" style="transition-delay:0.15s">
+    <div class="about-photo-wrap">
+      <!-- Replace with your actual photo path -->
+      <img
+        src="media/profile.jpeg"
+        alt="Het Sonkusare"
+        class="about-photo"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+      />
+      <div class="about-photo-placeholder" style="display:none">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="8" r="4.5"/><path d="M3 21c0-5 4-8.5 9-8.5s9 3.5 9 8.5"/></svg>
+        <div class="about-photo-placeholder-text">Add photo at<br>media/profile.jpeg</div>
+      </div>
+    </div>
+    <div class="about-avail-badge">
+      <div class="about-avail-dot"></div>
+      <span class="about-avail-text">Available for Work</span>
+    </div>
   </div>
 </section>
 
@@ -566,6 +649,7 @@ footer{padding:22px 52px;background:var(--bg2);border-top:2px solid var(--luffy)
 <script>
 const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
 let mx=0,my=0,rx=0,ry=0;
+if(window.matchMedia('(pointer:coarse)').matches){cursor.style.display='none';ring.style.display='none';}
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
 (function tick(){cursor.style.left=mx+'px';cursor.style.top=my+'px';rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick)})();
 
