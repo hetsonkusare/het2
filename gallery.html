@@ -89,6 +89,15 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;backg
 .step-text strong{color:var(--white)}
 
 /* PLAYER */
+/* Fullscreen support */
+.player-overlay:-webkit-full-screen{display:flex!important;width:100vw;height:100vh}
+.player-overlay:fullscreen{display:flex!important;width:100vw;height:100vh}
+:-webkit-full-screen .player-controls{display:block!important}
+:-webkit-full-screen .player-controls.visible{display:block!important}
+:fullscreen .player-controls.visible{display:block!important}
+/* Mobile cursor fix */
+@media (pointer:coarse){body,button,.gallery-item,.filter-btn,.icon-btn,.stage-nav,.img-ctrl-btn,.playlist-item{cursor:auto!important}}
+
 .player-overlay{position:fixed;inset:0;z-index:1000;background:rgba(8,6,4,0.97);display:none;flex-direction:column;overflow:hidden}
 .player-overlay.open{display:flex}
 .player-topbar{display:flex;align-items:center;gap:12px;padding:0 16px;height:50px;flex-shrink:0;background:#0a0703;border-bottom:1px solid var(--border)}
@@ -458,8 +467,21 @@ function updateVolIcon(){if(!currentVideo)return;const u=document.querySelector(
 function toggleLoop(){isLooping=!isLooping;if(currentVideo)currentVideo.loop=isLooping;document.getElementById('loopBtn').classList.toggle('active',isLooping)}
 function toggleAuto(){isAutoplay=!isAutoplay;document.getElementById('autoBtn').classList.toggle('active',isAutoplay)}
 function cycleSpeed(){speedIdx=(speedIdx+1)%speeds.length;if(currentVideo)currentVideo.playbackRate=speeds[speedIdx];document.getElementById('speedBtn').textContent=speeds[speedIdx]+'x'}
-function toggleFullscreen(){const s=document.getElementById('playerStage');if(!document.fullscreenElement){(s.requestFullscreen||s.webkitRequestFullscreen)?.call(s);document.querySelector('#fsIcon use').setAttribute('href','#i-fs-exit')}else{(document.exitFullscreen||document.webkitExitFullscreen)?.call(document);document.querySelector('#fsIcon use').setAttribute('href','#i-fs')}}
-document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement)document.querySelector('#fsIcon use')?.setAttribute('href','#i-fs')});
+function toggleFullscreen(){
+  const s=document.getElementById('playerOverlay');
+  const isFs=document.fullscreenElement||document.webkitFullscreenElement;
+  if(!isFs){
+    if(s.requestFullscreen)s.requestFullscreen();
+    else if(s.webkitRequestFullscreen)s.webkitRequestFullscreen();
+    document.querySelector('#fsIcon use').setAttribute('href','#i-fs-exit');
+  }else{
+    if(document.exitFullscreen)document.exitFullscreen();
+    else if(document.webkitExitFullscreen)document.webkitExitFullscreen();
+    document.querySelector('#fsIcon use').setAttribute('href','#i-fs');
+  }
+}
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&!document.webkitFullscreenElement)document.querySelector('#fsIcon use')?.setAttribute('href','#i-fs')});
+document.addEventListener('webkitfullscreenchange',()=>{if(!document.fullscreenElement&&!document.webkitFullscreenElement)document.querySelector('#fsIcon use')?.setAttribute('href','#i-fs')});
 
 const seekWrap=document.getElementById('seekbarWrap');let isSeeking=false;
 seekWrap.addEventListener('mousedown',e=>{isSeeking=true;doSeek(e)});document.addEventListener('mouseup',()=>{isSeeking=false});document.addEventListener('mousemove',e=>{if(isSeeking)doSeek(e)});
@@ -499,6 +521,8 @@ document.getElementById('playerStage').addEventListener('click',e=>{if(e.target.
 
 const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
 let mx=0,my=0,rx=0,ry=0;
+const isTouchDevice=()=>window.matchMedia('(pointer:coarse)').matches;
+if(isTouchDevice()){cursor.style.display='none';ring.style.display='none';document.body.style.cursor='auto';document.querySelectorAll('[style*="cursor:none"],[class*="cursor"]').forEach(el=>{el.style.cursor='auto'});}
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
 (function tick(){cursor.style.left=mx+'px';cursor.style.top=my+'px';rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick)})();
 
